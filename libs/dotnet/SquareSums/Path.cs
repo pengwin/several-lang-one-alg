@@ -1,0 +1,66 @@
+using System;
+using System.Collections.Generic;
+
+namespace SquareSums
+{
+    internal class Path {
+        private PathNode? _first;   
+        private PathNode? _last;
+        private  int _count;
+        private readonly Dictionary<int, bool> _attached;
+
+        private IReadOnlyList<int> ToVector(PathNode? node, List<int> v) {
+            while (node != null) {
+                v.Add(node.Value());
+                node = node.Prev();
+            }
+            return v;
+        }
+    
+        public Path(int capacity) {
+            _count = 0;
+            _last = null;
+            _attached = new Dictionary<int, bool>(capacity);
+        }
+    
+        public bool Contains(int n) {
+            return _attached.ContainsKey(n);
+        }
+
+        public int Count() {
+            return _count;
+        }
+
+        public void Push(int n) {
+            if (_attached.ContainsKey(n)) {
+                throw new Exception("Already attached");
+            }
+
+            var prev = _last;
+            _last = new PathNode(n, prev);
+
+            if (prev == null) {
+                _first = _last;
+            }
+
+            _attached[n] = true;
+            _count++;
+        }
+
+        public void Pop() {
+            if (_last == null) {
+                return;
+            }
+            _attached[_last.Value()] = false;
+            var prev = _last.Prev();
+            _last = prev;
+            _count--;
+        }
+
+        public IReadOnlyList<int> ToVector() {
+            return ToVector(_last, new List<int>());
+        }
+
+
+    }
+}
