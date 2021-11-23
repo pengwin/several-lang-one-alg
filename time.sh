@@ -10,4 +10,4 @@ echo 'Executing .NET'
 time ./bin/dotnet/SquareSumsCli
 
 echo 'Executing Node.js'
-time node ./libs/js/sums.js
+time node ./bin/nodejs/index-cli.js

@@ -1,6 +1,3 @@
 bin
 wasm
-obj
 .vscode
-.idea
-*.user

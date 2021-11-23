@@ -1,0 +1,14 @@
+{
+  "name": "square-sums",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sums.js",
+  "scripts": {
+    "build-cli": "tsc --build ./tsconfig-cli.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "4.5.2"
+  }
+}
