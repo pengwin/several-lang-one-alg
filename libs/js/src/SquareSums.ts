@@ -34,7 +34,10 @@ function buildTree(n: number) {
     return tree;
 }
 
+let dfsCounter: number = 0;
+
 function dfs(n: number, node: Node, path: Path) {
+    dfsCounter++;
     let comparer = new NodesInPathComparer(path);
     let pairs = [...node.pairs].sort((a, b) => comparer.compare(a, b));
 
@@ -48,12 +51,12 @@ function dfs(n: number, node: Node, path: Path) {
         path.push(v);
 
         if (path.count == n) {
-            return;
+            break;
         }
 
         dfs(n, p, path);
         if (path.count == n) {
-            return;
+            break;
         }
 
         path.pop();
@@ -72,6 +75,10 @@ export function squareSumsRow(n: number) {
         dfs(n, root, path);
         if (path.count == n) {
             let result = path.toVector();
+            if (dfsCounter / n > 3) {
+                console.log(`Counter for ${n} : ${dfsCounter}`);
+            }
+            dfsCounter = 0;
             return result;
         }
     }

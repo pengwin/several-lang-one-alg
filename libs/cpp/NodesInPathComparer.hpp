@@ -26,6 +26,18 @@ struct NodesInPathComparer {
         bool operator() (Node* i, Node* j) {
             int a = pairsNotInPath(i, path);
             int b = pairsNotInPath(j, path);
+            if (a != b) {
+                return a < b;
+            }
+            
+            a = i->PairsCount();
+            b = j->PairsCount();
+            if (a != b) {
+                return a < b;
+            }
+
+            a = i->Value();
+            b = j->Value();
             return a < b;
         }
 };

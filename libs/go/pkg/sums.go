@@ -1,6 +1,7 @@
 package sums
 
 import (
+	"fmt"
 	"math"
 	"sort"
 )
@@ -36,13 +37,22 @@ func buildTree(n int) *Tree {
 	return tree
 }
 
+var dfsCount int = 0
+
 func dfs(n int, node *Node, path *Path) {
+
+	dfsCount++
 
 	pairs := make([]*Node, node.PairsCount())
 	copy(pairs, node.Pairs())
 	sortFn := func(i, j int) bool {
 		a := pairs[i].PairsNotInPathCount(path)
 		b := pairs[j].PairsNotInPathCount(path)
+		if a != b {
+			return a < b
+		}
+		a = pairs[i].PairsCount()
+		b = pairs[j].PairsCount()
 		return a < b
 	}
 	sort.Slice(pairs, sortFn)
@@ -76,10 +86,14 @@ func SquareSumsRow(n int) []int {
 	}
 
 	for _, root := range tree.Roots() {
-		path := NewPath()
+		path := NewPath(n)
 		path.Push(root.Value())
 		dfs(n, root, path)
 		if path.Count() == n {
+			if dfsCount/n > 3 {
+				fmt.Printf("Counter for %d: %d\n", n, dfsCount)
+			}
+			dfsCount = 0
 			return path.Array()
 		}
 	}

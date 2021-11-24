@@ -1,5 +1,4 @@
 #include <cstddef>
-#include <map>
 #include <vector>
 
 #include "PathNode.hpp"
@@ -12,7 +11,7 @@ class Path {
         PathNode *first;   
         PathNode *last;
         int count;
-        std::map<int, bool> attached;
+        std::vector<bool> attached;
 
         std::vector<int> toVector(PathNode *node, std::vector<int> v) {
             PathNode *prev = node->Prev();
@@ -27,7 +26,10 @@ class Path {
         Path(int capacity) {
             count = 0;
             last = NULL;
-            attached = std::map<int, bool>();
+            attached = std::vector<bool>(capacity + 1);
+            for(int i = 0; i < capacity + 1; i++) {
+                attached[i] = false;
+            }
         }
 
         ~Path() {

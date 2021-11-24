@@ -3,13 +3,15 @@ using System.Linq;
 
 namespace SquareSums
 {
-    internal class NodesComparer: Comparer<Node> {
+    internal class NodesComparer : Comparer<Node>
+    {
         private readonly Path _path;
-    
-        public NodesComparer(Path p) {
+
+        public NodesComparer(Path p)
+        {
             _path = p;
         }
-    
+
         public override int Compare(Node? x, Node? y)
         {
             if (x == null || y == null)
@@ -19,13 +21,23 @@ namespace SquareSums
 
             var a = PairsNotInPath(x, _path);
             var b = PairsNotInPath(y, _path);
-            
-            if (a < b)
+
+            if (a != b)
             {
-                return -1;
+                return a < b ? -1 : 1;
             }
 
-            return 1;
+            a = x.PairsCount();
+            b = y.PairsCount();
+            
+            if (a != b)
+            {
+                return a < b ? -1 : 1;
+            }
+
+            a = x.Value();
+            b = y.Value();
+            return a < b ? -1 : 1;
         }
 
         private static int PairsNotInPath(Node n, Path path)

@@ -43,7 +43,10 @@ Tree* build_tree(int n) {
 	return tree;
 }
 
+int dfsCounter = 0;
+
 void dfs(int n, Node *node, Path* path) {
+	dfsCounter++;
     std::vector<Node*> pairs(node->PairsCount());
     std::vector<Node*> src = node->Pairs();
     std::copy(src.begin(), src.end(), pairs.begin());
@@ -87,6 +90,10 @@ std::vector<int> square_sums_row(int n) {
 		if (path->Count() == n) {
             std::vector<int> result = path->ToVector();
             delete path;
+			if (dfsCounter/n > 1) {
+				std::cout << "Counter for " << n << " : " << dfsCounter << "\n";
+			}			
+			dfsCounter = 0;
 			return result;
 		}
         delete path;

@@ -2,15 +2,8 @@ package sums
 
 import (
 	"fmt"
-	"hash/fnv"
 	"strings"
 )
-
-func hash(s string) uint32 {
-	h := fnv.New32a()
-	h.Write([]byte(s))
-	return h.Sum32()
-}
 
 type PathNode struct {
 	prev  *PathNode
@@ -25,13 +18,19 @@ type Path struct {
 	first    *PathNode
 	last     *PathNode
 	count    int
-	attached map[int]bool
+	attached []bool
 }
 
-func NewPath() *Path {
+func NewPath(capacity int) *Path {
+
+	attached := make([]bool, capacity+1)
+	for i := 0; i < capacity+1; i++ {
+		attached[i] = false
+	}
+
 	return &Path{
 		count:    0,
-		attached: make(map[int]bool),
+		attached: attached,
 	}
 }
 
@@ -51,7 +50,7 @@ func (p *Path) Pop() {
 	if p.last == nil {
 		return
 	}
-	delete(p.attached, p.last.value)
+	p.attached[p.last.value] = false
 	prev := p.last.prev
 	p.last = prev
 	p.count--
@@ -92,10 +91,6 @@ func (p *Path) Array() []int {
 		a[i], a[opp] = a[opp], a[i]
 	}
 	return a
-}
-
-func (p *Path) Hash() uint32 {
-	return hash(p.String())
 }
 
 func (p *Path) String() string {
