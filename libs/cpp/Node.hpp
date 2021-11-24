@@ -51,9 +51,16 @@ class Node {
 
         static bool CompareNodes(Node *i, Node *j) 
         { 
-            int pairs_count_a = i->PairsCount();
-            int pairs_count_b = j->PairsCount();
-            return pairs_count_a < pairs_count_b;
+            int a = i->PairsCount();
+            int b = j->PairsCount();
+            if (a != b) {
+                return a < b;
+            }
+
+            a = i->Value();
+            b = j->Value();
+            
+            return b < a;
         }
 };
 

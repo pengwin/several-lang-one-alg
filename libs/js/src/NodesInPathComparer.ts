@@ -23,18 +23,12 @@ export class NodesInPathComparer {
       let a = this.pairsNotInPath(i);
       let b = this.pairsNotInPath(j);
       if (a != b) {
-        if (a < b) {
-          return -1;
-        }
-        return 1;
+        return a < b ? -1 : 1;
       }
 
       a = i.pairsCount();
       b = i.pairsCount();
 
-      if (a < b) {
-        return -1;
-      }
-      return 1;
+      return a < b ? -1 : 1;
     }
   }

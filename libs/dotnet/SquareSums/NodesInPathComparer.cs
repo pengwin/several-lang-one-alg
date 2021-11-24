@@ -21,10 +21,9 @@ namespace SquareSums
 
             var a = PairsNotInPath(x, _path);
             var b = PairsNotInPath(y, _path);
-
             if (a != b)
             {
-                return a < b ? -1 : 1;
+                return a.CompareTo(b);
             }
 
             a = x.PairsCount();
@@ -32,12 +31,12 @@ namespace SquareSums
             
             if (a != b)
             {
-                return a < b ? -1 : 1;
+                return a.CompareTo(b);
             }
 
             a = x.Value();
             b = y.Value();
-            return a < b ? -1 : 1;
+            return b.CompareTo(a);
         }
 
         private static int PairsNotInPath(Node n, Path path)

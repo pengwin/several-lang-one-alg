@@ -20,9 +20,16 @@ func NewNode(n int) *Node {
 
 func sortNodesFunc(nodes []*Node) func(int, int) bool {
 	return func(i, j int) bool {
-		pairsCountA := nodes[i].PairsCount()
-		pairsCountB := nodes[j].PairsCount()
-		return pairsCountA < pairsCountB
+		a := nodes[i].PairsCount()
+		b := nodes[j].PairsCount()
+		if a != b {
+			return a < b
+		}
+
+		a = nodes[i].value
+		b = nodes[j].value
+
+		return a > b
 	}
 }
 

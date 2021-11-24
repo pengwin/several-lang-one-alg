@@ -53,7 +53,14 @@ func dfs(n int, node *Node, path *Path) {
 		}
 		a = pairs[i].PairsCount()
 		b = pairs[j].PairsCount()
-		return a < b
+
+		if a != b {
+			return a < b
+		}
+
+		a = pairs[i].value
+		b = pairs[j].value
+		return a > b
 	}
 	sort.Slice(pairs, sortFn)
 

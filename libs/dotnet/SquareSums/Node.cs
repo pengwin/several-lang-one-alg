@@ -50,12 +50,12 @@ namespace SquareSums
             int a = i.PairsCount();
             int b = j.PairsCount();
 
-            if (a < b)
+            if (a != b)
             {
-                return -1;
+                return a.CompareTo(b);
             }
 
-            return 1;
+            return j.Value().CompareTo(i.Value());
         }
     };
 }

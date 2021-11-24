@@ -38,6 +38,6 @@ struct NodesInPathComparer {
 
             a = i->Value();
             b = j->Value();
-            return a < b;
+            return b < a;
         }
 };
