@@ -6,11 +6,7 @@ export class Node {
       this.value = val;
       this.pairs = [];
     }
-  
-    sortPairs() {
-      this.pairs = this.pairs.sort((a, b) => Node.compareNodes(a, b));
-    }
-  
+    
     pairsCount() {
       return this.pairs.length;
     }

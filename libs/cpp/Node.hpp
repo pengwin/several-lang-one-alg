@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <memory>
 
 #ifndef __node
 #define __node
@@ -8,12 +9,12 @@
 class Node {
     private:
         int value;
-        std::vector<Node*> pairs;
+        std::vector<std::shared_ptr<Node>> pairs;
 
     public:
         Node(int val) {
             value = val;
-            pairs = std::vector<Node*>();
+            pairs = std::vector<std::shared_ptr<Node>>();
         }
 
         ~Node() {
@@ -24,15 +25,11 @@ class Node {
             return value;
         }
 
-        std::vector<Node*> Pairs() {
-            return pairs;
+        std::vector<std::shared_ptr<Node>>* Pairs() {
+            return &pairs;
         }
 
-        void SortPairs() {
-            std::sort(pairs.begin(), pairs.end(), Node::CompareNodes);
-        }
-
-        void Add(Node* node ) {
+        void Add(std::shared_ptr<Node> node ) {
             pairs.push_back(node);
         }
 
@@ -42,14 +39,14 @@ class Node {
 
         void PrintPairs() {
             std::cout << Value() << ":[";
-            for (Node *p : pairs) {
+            for (std::shared_ptr<Node>p : pairs) {
                 int v = p->Value();
                 std::cout << v << ", ";
             }
             std::cout << "]\n";
         }
 
-        static bool CompareNodes(Node *i, Node *j) 
+        static bool CompareNodes(std::shared_ptr<Node>i, std::shared_ptr<Node>j) 
         { 
             int a = i->PairsCount();
             int b = j->PairsCount();

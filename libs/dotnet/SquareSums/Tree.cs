@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SquareSums
 {
     internal class Tree
     {
-        private readonly Node?[] _nodes;
+        private Node?[] _nodes;
 
         private Node GetOrCreate(int n)
         {
@@ -54,7 +55,7 @@ namespace SquareSums
             return true;
         }
 
-        public void SortPairs()
+        /*public void SortPairs()
         {
             foreach (var n in _nodes)
             {
@@ -62,6 +63,20 @@ namespace SquareSums
             }
 
             Array.Sort(_nodes, Node.CompareNodes);
+        }*/
+
+        public void SortPairsUsing(NodesSorting sorting)
+        {
+            foreach (var n in _nodes)
+            {
+                if (n == null)
+                {
+                    throw new Exception("Unexpected null node");
+                }
+                n.SortPairsUsing(sorting);
+            }
+
+            _nodes = sorting.SortNodes(_nodes!).ToArray();
         }
     }
 }

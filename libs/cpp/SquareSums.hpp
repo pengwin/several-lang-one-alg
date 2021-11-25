@@ -8,25 +8,31 @@
 #include "Node.hpp"
 #include "Tree.hpp"
 #include "Path.hpp"
-#include "NodesInPathComparer.hpp"
+#include "NodesSorting.hpp"
 
-bool is_fair_square(int n) {
+bool is_fair_square(int n)
+{
 	double sqrtVal = sqrt((double)n);
 	return sqrtVal - floor(sqrtVal) == 0;
 }
 
-Tree* build_tree(int n) {
+Tree *build_tree(int n)
+{
 	Tree *tree = new Tree(n);
 
-	for (int i = 1; i <= n; i++) {
+	for (int i = 1; i <= n; i++)
+	{
 
-		for (int j = 1; j <= n; j++) {
-			if (i == j) {
+		for (int j = 1; j <= n; j++)
+		{
+			if (i == j)
+			{
 				continue;
 			}
 
 			int sum = i + j;
-			if (!is_fair_square(sum)) {
+			if (!is_fair_square(sum))
+			{
 				continue;
 			}
 
@@ -34,70 +40,84 @@ Tree* build_tree(int n) {
 		}
 	}
 
-	if (!tree->VerifyAllNodesHavePairs()) {
-    delete tree;
+	if (!tree->VerifyAllNodesHavePairs())
+	{
+		delete tree;
 		return NULL;
 	}
 
-	tree->SortPairs();
+	auto sorting = new NodesSorting(NULL, n);
+	tree->SortPairsWithSorting(sorting);
 	return tree;
 }
 
 int dfsCounter = 0;
 
-void dfs(int n, Node *node, Path* path) {
+void dfs(int n, std::shared_ptr<Node> node, std::shared_ptr<Path> path)
+{
 	dfsCounter++;
-    std::vector<Node*> pairs(node->PairsCount());
-    std::vector<Node*> src = node->Pairs();
-    std::copy(src.begin(), src.end(), pairs.begin());
+	NodesSorting *sorting = new NodesSorting(path, n);
 
-    std::sort(pairs.begin(), pairs.end(), NodesInPathComparer(path) );
+	std::vector<std::shared_ptr<Node>> pairs(node->PairsCount());
+	std::vector<std::shared_ptr<Node>> src = *node->Pairs();
+	std::copy(src.begin(), src.end(), pairs.begin());
 
-	for (Node *p : pairs) {
+	sorting->SortNodes(&pairs);
+
+	for (std::shared_ptr<Node> p : pairs)
+	{
 		int v = p->Value();
 
-		if (path->Contains(v)) {
+		if (path->Contains(v))
+		{
 			continue;
 		}
 
 		path->Push(v);
 
-		if (path->Count() == n) {
+		if (path->Count() == n)
+		{
 			break;
 		}
 
 		dfs(n, p, path);
-		if (path->Count() == n) {
+		if (path->Count() == n)
+		{
 			break;
 		}
 
 		path->Pop();
 	}
 
-    pairs.clear();
+	pairs.clear();
 }
 
-std::vector<int> square_sums_row(int n) {
-    Tree *tree = build_tree(n);
-	if (tree == NULL) {
+std::vector<int> square_sums_row(int n)
+{
+	Tree *tree = build_tree(n);
+	if (tree == NULL)
+	{
 		return std::vector<int>();
 	}
 
-    for (Node *root : tree->Roots()) {
-        Path *path = new Path(n);
+	for (std::shared_ptr<Node> root : tree->Roots())
+	{
+		std::shared_ptr<Path> path = std::shared_ptr<Path>(new Path(n));
 		path->Push(root->Value());
 		dfs(n, root, path);
-		if (path->Count() == n) {
-            std::vector<int> result = path->ToVector();
-            delete path;
-			if (dfsCounter/n > 1) {
+		if (path->Count() == n)
+		{
+			std::vector<int> result = path->ToVector();
+			path.reset();
+			if (dfsCounter / n > 1)
+			{
 				std::cout << "Counter for " << n << " : " << dfsCounter << "\n";
-			}			
+			}
 			dfsCounter = 0;
 			return result;
 		}
-        delete path;
+		path.reset();
 	}
-    delete tree;
+	delete tree;
 	return std::vector<int>();
 }

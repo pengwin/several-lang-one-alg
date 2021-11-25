@@ -1,7 +1,7 @@
 import { Tree } from './Tree';
 import { Node } from './Node';
 import { Path } from './Path';
-import { NodesInPathComparer } from './NodesInPathComparer';
+import { NodesSorting } from './NodesSorting';
 
 function isFairSquare(n: number) {
     let sqrtVal = Math.sqrt(n);
@@ -30,7 +30,8 @@ function buildTree(n: number) {
         return false;
     }
 
-    tree.sortPairs();
+    let sorting = new NodesSorting(null, n);
+    tree.sortPairsWithSorting(sorting);
     return tree;
 }
 
@@ -38,8 +39,8 @@ let dfsCounter: number = 0;
 
 function dfs(n: number, node: Node, path: Path) {
     dfsCounter++;
-    let comparer = new NodesInPathComparer(path);
-    let pairs = [...node.pairs].sort((a, b) => comparer.compare(a, b));
+    let sorting = new NodesSorting(path, n);
+    let pairs = sorting.sortNodes(node.pairs);
 
     for (let p of pairs) {
         let v = p.value;

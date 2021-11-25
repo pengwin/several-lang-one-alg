@@ -16,7 +16,7 @@ class PathNode {
             return value;
         }
 
-        PathNode* Prev() {
+        PathNode *Prev() {
             return prev;
         }
 };

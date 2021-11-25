@@ -1,4 +1,5 @@
 import { Node } from './Node';
+import { NodesSorting } from './NodesSorting';
 
 export class Tree {
     public nodes: Array<Node>;
@@ -35,11 +36,11 @@ export class Tree {
       return true;
     }
   
-    sortPairs() {
+    sortPairsWithSorting(sorting: NodesSorting) {
       for (let n of this.nodes) {
-        n.sortPairs();
+        n.pairs = sorting.sortNodes(n.pairs);
       }
   
-      this.nodes = this.nodes.sort((a, b) => Node.compareNodes(a, b));
+      this.nodes = sorting.sortNodes(this.nodes);
     }
   }

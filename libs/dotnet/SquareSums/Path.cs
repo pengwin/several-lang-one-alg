@@ -5,7 +5,6 @@ namespace SquareSums
 {
     internal class Path
     {
-        private PathNode? _first;
         private PathNode? _last;
         private int _count;
         private readonly bool[] _attached;
@@ -51,12 +50,7 @@ namespace SquareSums
 
             var prev = _last;
             _last = new PathNode(n, prev);
-
-            if (prev == null)
-            {
-                _first = _last;
-            }
-
+            
             _attached[n] = true;
             _count++;
         }

@@ -6,8 +6,8 @@ import (
 
 func main() {
 
-	sums.SquareSumsRow(279)
-	return
+	/*sums.SquareSumsRow(279)
+	return*/
 
 	for n := 0; n < 2000; n++ {
 		a := sums.SquareSumsRow(n)

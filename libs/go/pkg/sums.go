@@ -3,7 +3,6 @@ package sums
 import (
 	"fmt"
 	"math"
-	"sort"
 )
 
 func IsFairSquare(n int) bool {
@@ -33,7 +32,8 @@ func buildTree(n int) *Tree {
 		return nil
 	}
 
-	tree.SortPairs()
+	sorting := NewNodesSorting(nil, n)
+	tree.SortPairsWithSorting(sorting)
 	return tree
 }
 
@@ -42,27 +42,9 @@ var dfsCount int = 0
 func dfs(n int, node *Node, path *Path) {
 
 	dfsCount++
+	sorting := NewNodesSorting(path, n)
 
-	pairs := make([]*Node, node.PairsCount())
-	copy(pairs, node.Pairs())
-	sortFn := func(i, j int) bool {
-		a := pairs[i].PairsNotInPathCount(path)
-		b := pairs[j].PairsNotInPathCount(path)
-		if a != b {
-			return a < b
-		}
-		a = pairs[i].PairsCount()
-		b = pairs[j].PairsCount()
-
-		if a != b {
-			return a < b
-		}
-
-		a = pairs[i].value
-		b = pairs[j].value
-		return a > b
-	}
-	sort.Slice(pairs, sortFn)
+	pairs := sorting.SortNodes(node.Pairs())
 
 	for _, p := range pairs {
 		v := p.Value()

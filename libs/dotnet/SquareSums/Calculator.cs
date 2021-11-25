@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SquareSums
 {
     public static class Calculator
     {
-        private static int DFSCounter = 0;
+        private static int _dfsCounter;
 
         private static bool IsFairSquare(int n)
         {
@@ -40,18 +41,16 @@ namespace SquareSums
             {
                 return null;
             }
-
-            tree.SortPairs();
+            
+            tree.SortPairsUsing(new NodesSorting(null, n));
             return tree;
         }
 
         private static void Dfs(int n, Node node, Path path)
         {
-            DFSCounter++;
-            var pairs = new List<Node>(node.PairsCount());
-            pairs.AddRange(node.Pairs());
-
-            pairs.Sort(new NodesComparer(path));
+            _dfsCounter++;
+            var sorting = new NodesSorting(path, n);
+            var pairs = sorting.SortNodes(node.Pairs()).ToArray();
 
             foreach (var p in pairs)
             {
@@ -100,12 +99,12 @@ namespace SquareSums
                 if (path.Count() == n)
                 {
                     IReadOnlyList<int> result = path.ToVector();
-                    if (DFSCounter / n > 3)
+                    if (_dfsCounter / n > 3)
                     {
-                        Console.WriteLine("Counter for {0}: {1}", n, DFSCounter);
+                        Console.WriteLine("Counter for {0}: {1}", n, _dfsCounter);
                     }
 
-                    DFSCounter = 0;
+                    _dfsCounter = 0;
                     return result;
                 }
             }

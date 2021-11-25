@@ -14,4 +14,6 @@ wasm:
 	mkdir -p $(OUT_DIR_WASM)
 	em++ -O3 main_wasm.cpp -s WASM=1 -o $(OUTPUT_WASM)
 
-
+debug-run:
+	g++ main.cpp -g -o $(OUTPUT_BIN)
+	gdb $(OUTPUT_BIN)

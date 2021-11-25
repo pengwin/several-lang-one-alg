@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SquareSums
 {
     internal class Node
     {
         private readonly int _value;
-        private readonly List<Node> _pairs;
+        private List<Node> _pairs;
 
 
         public Node(int val)
@@ -25,9 +26,14 @@ namespace SquareSums
             return _pairs;
         }
 
-        public void SortPairs()
+        /*public void SortPairs()
         {
             _pairs.Sort(CompareNodes);
+        }*/
+        
+        public void SortPairsUsing(NodesSorting sorting)
+        {
+            _pairs = sorting.SortNodes(_pairs).ToList();
         }
 
         public void Add(Node node)
