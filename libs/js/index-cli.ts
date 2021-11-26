@@ -1,26 +1,15 @@
-
-
-
-
-
-
-
-
-
-
+import { Metrics } from './src/Metrics';
 import { squareSumsRow } from './src/SquareSums';
 
 function main() {
 
+  let metrics = new Metrics(false);
   //return squareSumsRow(886);
-
-  //console.time('Total');
+  
   for (let n = 2; n <= 2000; n++) {
-    //console.time(n.toString());
-    let res = squareSumsRow(n);
-    //console.timeEnd(n.toString());
+    let res = squareSumsRow(n, metrics);
   }
-  //console.timeEnd('Total');
+  metrics.printMetrics();
 }
 
 main();

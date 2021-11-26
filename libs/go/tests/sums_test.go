@@ -44,7 +44,7 @@ func TestSums(t *testing.T) {
 
 	for _, n := range valid {
 		t.Run(fmt.Sprintf("%d", n), func(t *testing.T) {
-			a := sums.SquareSumsRow(n)
+			a := sums.SquareSumsRow(n, nil)
 			verify(t, n, a)
 		})
 	}
@@ -53,7 +53,7 @@ func TestSums(t *testing.T) {
 func TestSumsAll(t *testing.T) {
 	for i := 2; i <= 2000; i++ {
 		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
-			a := sums.SquareSumsRow(i)
+			a := sums.SquareSumsRow(i, nil)
 			verify(t, i, a)
 		})
 	}
@@ -62,7 +62,7 @@ func TestSumsAll(t *testing.T) {
 func BenchmarkSums(b *testing.B) {
 	for i := 2; i <= 1000; i++ {
 		b.Run(fmt.Sprintf("%d", i), func(b *testing.B) {
-			a := sums.SquareSumsRow(i)
+			a := sums.SquareSumsRow(i, nil)
 			verify(b, i, a)
 		})
 	}

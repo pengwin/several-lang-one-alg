@@ -6,11 +6,12 @@ import (
 
 func main() {
 
+	metrics := sums.NewMetrics(false)
 	/*sums.SquareSumsRow(279)
 	return*/
 
 	for n := 0; n < 2000; n++ {
-		a := sums.SquareSumsRow(n)
+		a := sums.SquareSumsRow(n, metrics)
 		if a == nil {
 			// no
 			//fmt.Printf("No")
@@ -20,4 +21,6 @@ func main() {
 		}
 		//fmt.Printf("%d\n", n)
 	}
+
+	metrics.PrintMetrics()
 }

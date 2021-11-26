@@ -1,72 +1,48 @@
 package sums
 
-type SortBucket struct {
-	Value *Node
-
-	Next *SortBucket
-}
-
-func newSortBucket(value *Node) *SortBucket {
-	return &SortBucket{
-		Value: value,
-		Next:  nil,
-	}
-}
-
 type SortBucketList struct {
-	path  *Path
-	First *SortBucket
+	path *Path
+	list []*Node
 }
 
 func newSortBucketList(path *Path) *SortBucketList {
 	return &SortBucketList{
-		path:  path,
-		First: nil,
+		path: path,
+		list: make([]*Node, 0),
 	}
 }
 
-func (rcvr *SortBucketList) AddNode(node *Node) {
-	if rcvr.First == nil {
-		rcvr.First = newSortBucket(node)
-		return
-	}
+func (rcvr *SortBucketList) Nodes() []*Node {
+	return rcvr.list
+}
 
-	current := rcvr.First
-	var prev *SortBucket = nil
-	for current != nil {
-		var condition bool = false
+func (rcvr *SortBucketList) AddNode(node *Node) {
+	var found bool = false
+	for index, currentNode := range rcvr.list {
+		var condition bool
 		if rcvr.path != nil {
 			a := node.PairsCount()
-			b := current.Value.PairsCount()
+			b := currentNode.PairsCount()
 			if a != b {
 				condition = a < b
 			} else {
-				condition = node.Value() > current.Value.Value()
+				condition = node.Value() > currentNode.Value()
 			}
 		} else {
-			condition = node.Value() > current.Value.Value()
+			condition = node.Value() > currentNode.Value()
 		}
 
 		if condition {
-			next := current
-			current = newSortBucket(node)
-			current.Next = next
-
-			if prev != nil {
-				prev.Next = current
-			} else {
-				rcvr.First = current
-			}
+			rcvr.list = append(rcvr.list[:index+1], rcvr.list[index:]...)
+			rcvr.list[index] = node
+			found = true
 			break
 		}
-
-		prev = current
-		current = current.Next
 	}
 
 	// reached end of list without adding
-	if current == nil && prev != nil {
-		prev.Next = newSortBucket(node)
+	if !found {
+		rcvr.list = append(rcvr.list, node)
 	}
 }
 
@@ -111,11 +87,9 @@ func (rcvr *NodesSorting) SortNodes(nodes []*Node) []*Node {
 			continue
 		}
 
-		current := list.First
-		for current != nil {
-			result[index] = current.Value
+		for _, n := range list.Nodes() {
+			result[index] = n
 			index++
-			current = current.Next
 		}
 	}
 	return result

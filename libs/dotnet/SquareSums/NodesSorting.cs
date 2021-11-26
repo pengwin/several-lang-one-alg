@@ -7,83 +7,54 @@ namespace SquareSums
     class SortBucketList
     {
         private readonly Path? _path;
-        public SortBucket? First { get; private set; }
+        private List<Node> _list;
 
         public SortBucketList(Path? path)
         {
             _path = path;
+            _list = new List<Node>();
         }
+
+        public IEnumerable<Node> Nodes() => _list;
 
         public void AddNode(Node node)
         {
-            if (First == null)
+            bool found = false;
+            for (int i = 0; i < _list.Count; i++)
             {
-                First = new SortBucket(node);
-                return;
-            }
-
-            var current = First;
-            SortBucket? prev = null;
-            while (current != null)
-            {
+                var currentNode = _list[i];
                 bool condition;
                 if (_path != null)
                 {
                     var a = node.PairsCount();
-                    var b = current.Value.PairsCount();
+                    var b = currentNode.PairsCount();
                     if (a != b)
                     {
                         condition = a < b;
                     }
                     else
                     {
-                        condition = node.Value() > current.Value.Value();
+                        condition = node.Value() > currentNode.Value();
                     }
                 }
                 else
                 {
-                    condition = node.Value() > current.Value.Value();
+                    condition = node.Value() > currentNode.Value();
                 }
 
                 if (condition)
                 {
-                    var next = current;
-                    current = new SortBucket(node)
-                    {
-                        Next = next
-                    };
-                    if (prev != null)
-                    {
-                        prev.Next = current;
-                    }
-                    else
-                    {
-                        First = current;
-                    }
+                    _list.Insert(i, node);
+                    found = true;
                     break;
                 }
-
-                prev = current;
-                current = current.Next;
             }
 
             // reached end of list without adding
-            if (current == null && prev != null)
+            if (!found)
             {
-                prev.Next = new SortBucket(node);
+                _list.Add(node);
             }
-        }
-    }
-
-    class SortBucket
-    {
-        public Node Value { get; }
-        
-        public SortBucket? Next { get; set; }
-
-        public SortBucket(Node value)
-        {
-            Value = value;
         }
     }
     
@@ -118,18 +89,17 @@ namespace SquareSums
                 sortList[pairsCount] = list;
             }
 
-            foreach (var list in sortList)
+            for (var index = 0; index < sortList.Length; index++)
             {
+                var list = sortList[index];
                 if (list == null)
                 {
                     continue;
                 }
 
-                var current = list.First;
-                while (current != null)
+                foreach (var node in list.Nodes())
                 {
-                    yield return current.Value;
-                    current = current.Next;
+                    yield return node;
                 }
             }
         }

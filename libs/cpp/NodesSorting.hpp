@@ -1,7 +1,8 @@
 #include <cstddef>
 #include <vector>
 #include <stdexcept>
-#include <memory>
+
+#include <iostream>
 
 #include "Node.hpp"
 #include "Path.hpp"
@@ -9,98 +10,97 @@
 #ifndef __nodes_sorting
 #define __nodes_sorting
 
-class SortBucket
+class SortBacketItem
 {
+private:
+    Node *_value;
+
 public:
-    std::shared_ptr<Node> Value;
-
-    std::shared_ptr<SortBucket> Next;
-
-    SortBucket(std::shared_ptr<Node> value)
+    SortBacketItem(Node *value)
     {
-        Value = value;
+        _value = value;
+    }
+
+    Node *Value()
+    {
+        return _value;
     }
 };
 
 class SortBucketList
 {
 private:
-    std::shared_ptr<Path>_path;
+    Path *_path;
+    std::vector<SortBacketItem *> *_list;
 
 public:
-    std::shared_ptr<SortBucket> First;
-
-    SortBucketList(std::shared_ptr<Path>path)
+    SortBucketList(Path *path)
     {
+        _list = new std::vector<SortBacketItem *>();
         _path = path;
     }
 
-    void AddNode(std::shared_ptr<Node> node)
+    ~SortBucketList()
     {
-        if (First == NULL)
-        {
-            First = std::shared_ptr<SortBucket>(new SortBucket(node));
-            return;
+        for(SortBacketItem * item : *_list) {
+            delete item;
         }
+        delete _list;
+    }
 
-        auto current = First;
-        std::shared_ptr<SortBucket> prev = NULL;
-        while (current != NULL)
+    std::vector<SortBacketItem *> *List()
+    {
+        return _list;
+    }
+
+    void AddNode(Node *node)
+    {
+        bool found = false;
+        for (int i = 0; i < _list->size(); i++)
         {
+            Node *currentNode = _list->at(i)->Value();
             bool condition;
             if (_path != NULL)
             {
                 auto a = node->PairsCount();
-                auto b = current->Value->PairsCount();
+                auto b = currentNode->PairsCount();
                 if (a != b)
                 {
                     condition = a < b;
                 }
                 else
                 {
-                    condition = node->Value() > current->Value->Value();
+                    condition = node->Value() > currentNode->Value();
                 }
             }
             else
             {
-                condition = node->Value() > current->Value->Value();
+                condition = node->Value() > currentNode->Value();
             }
 
             if (condition)
             {
-                auto next = current;
-                current = std::shared_ptr<SortBucket>(new SortBucket(node));
-                current->Next = next;
-
-                if (prev != NULL)
-                {
-                    prev->Next = current;
-                }
-                else
-                {
-                    First = current;
-                }
+                auto pos = _list->begin() + i;
+                _list->insert(pos, new SortBacketItem(node));
+                found = true;
                 break;
             }
-
-            prev = current;
-            current = current->Next;
         }
 
         // reached end of list without adding
-        if (current == NULL && prev != NULL)
+        if (!found)
         {
-            prev->Next = std::shared_ptr<SortBucket>(new SortBucket(node));
+            _list->push_back(new SortBacketItem(node));
         }
     }
 };
 
-int pairsNotInPath(std::shared_ptr<Node> n, std::shared_ptr<Path>path)
+int pairsNotInPath(Node *n, Path *path)
 {
     int count = 0;
-    for (std::shared_ptr<Node> p : *n->Pairs())
+    for (Node *p : *n->Pairs())
     {
-        if (p == NULL)
+        if (p == nullptr)
         {
             throw std::invalid_argument("Received unexpected null node");
         }
@@ -113,57 +113,84 @@ int pairsNotInPath(std::shared_ptr<Node> n, std::shared_ptr<Path>path)
     return count;
 }
 
+class SortListContainer
+{
+private:
+    Path *_path;
+
+public:
+    std::vector<SortBucketList *> *SortList;
+
+    SortListContainer(Path *path, int maxN)
+    {
+        _path = path;
+        SortList = new std::vector<SortBucketList *>(maxN + 1);
+    }
+
+    ~SortListContainer()
+    {
+        for(SortBucketList * list: *SortList)
+        {
+            delete list;
+        }
+        delete SortList;
+    }
+
+    void AddNode(Node *node)
+    {
+        auto pairsCount = _path == NULL ? node->PairsCount() : pairsNotInPath(node, _path);
+
+        auto list = SortList->at(pairsCount);
+        if (list == NULL)
+        {
+            list = new SortBucketList(_path);
+        }
+
+        list->AddNode(node);
+
+        (*SortList)[pairsCount] = list;
+    }
+};
+
 class NodesSorting
 {
 private:
-    std::shared_ptr<Path>_path;
+    Path *_path;
     int _maxN;
 
 public:
-    NodesSorting(std::shared_ptr<Path>path, int maxN)
+    NodesSorting(Path *path, int maxN)
     {
         _path = path;
         _maxN = maxN;
     }
 
 public:
-    void SortNodes(std::vector<std::shared_ptr<Node>> *nodes)
+    void SortNodes(std::vector<Node *> *nodes)
     {
-        auto sortList = std::vector<SortBucketList *>(_maxN + 1);
+        auto sortList = new SortListContainer(_path, _maxN);
 
-        for (std::shared_ptr<Node> node : *nodes)
+        for (Node *node : *nodes)
         {
-            auto pairsCount = _path == NULL ? node->PairsCount() : pairsNotInPath(node, _path);
-
-            auto list = sortList[pairsCount];
-            if (list == NULL)
-            {
-                list = new SortBucketList(_path);
-            }
-
-            list->AddNode(node);
-
-            sortList[pairsCount] = list;
+            sortList->AddNode(node);
         }
 
         int index = 0;
-        for (auto list : sortList)
+        for (auto list : *(sortList->SortList))
         {
             if (list == NULL)
             {
                 continue;
             }
 
-            auto current = list->First;
-            while (current != NULL)
+            for (auto item : *list->List())
             {
-                (*nodes)[index] = current->Value;
+                (*nodes)[index] = item->Value();
                 index++;
-                current = current->Next;
             }
         }
 
-        sortList.clear();
+        delete sortList;
     }
 };
 

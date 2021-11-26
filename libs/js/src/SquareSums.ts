@@ -2,6 +2,7 @@ import { Tree } from './Tree';
 import { Node } from './Node';
 import { Path } from './Path';
 import { NodesSorting } from './NodesSorting';
+import { Metrics } from './Metrics';
 
 function isFairSquare(n: number) {
     let sqrtVal = Math.sqrt(n);
@@ -35,10 +36,9 @@ function buildTree(n: number) {
     return tree;
 }
 
-let dfsCounter: number = 0;
+function dfs(n: number, node: Node, path: Path, metrics?: Metrics) {
+    metrics?.incrementDfsCounter();
 
-function dfs(n: number, node: Node, path: Path) {
-    dfsCounter++;
     let sorting = new NodesSorting(path, n);
     let pairs = sorting.sortNodes(node.pairs);
 
@@ -55,7 +55,7 @@ function dfs(n: number, node: Node, path: Path) {
             break;
         }
 
-        dfs(n, p, path);
+        dfs(n, p, path, metrics);
         if (path.count == n) {
             break;
         }
@@ -64,7 +64,7 @@ function dfs(n: number, node: Node, path: Path) {
     }
 }
 
-export function squareSumsRow(n: number) {
+export function squareSumsRow(n: number, metrics?: Metrics) {
     let tree = buildTree(n);
     if (!tree) {
         return false;
@@ -73,13 +73,10 @@ export function squareSumsRow(n: number) {
     for (let root of tree.nodes) {
         var path = new Path(n);
         path.push(root.value);
-        dfs(n, root, path);
+        dfs(n, root, path, metrics);
         if (path.count == n) {
             let result = path.toVector();
-            if (dfsCounter / n > 3) {
-                console.log(`Counter for ${n} : ${dfsCounter}`);
-            }
-            dfsCounter = 0;
+            metrics.finalizeDfsCounter(n);
             return result;
         }
     }

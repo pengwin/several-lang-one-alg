@@ -6,8 +6,6 @@ namespace SquareSums
 {
     public static class Calculator
     {
-        private static int _dfsCounter;
-
         private static bool IsFairSquare(int n)
         {
             double sqrtVal = Math.Sqrt(n);
@@ -46,9 +44,9 @@ namespace SquareSums
             return tree;
         }
 
-        private static void Dfs(int n, Node node, Path path)
+        private static void Dfs(int n, Node node, Path path, Metrics? metrics)
         {
-            _dfsCounter++;
+            metrics?.IncrementDfsCounter();
             var sorting = new NodesSorting(path, n);
             var pairs = sorting.SortNodes(node.Pairs()).ToArray();
 
@@ -68,7 +66,7 @@ namespace SquareSums
                     break;
                 }
 
-                Dfs(n, p, path);
+                Dfs(n, p, path, metrics);
                 if (path.Count() == n)
                 {
                     break;
@@ -78,7 +76,7 @@ namespace SquareSums
             }
         }
 
-        public static IReadOnlyList<int> SquareSumsRow(int n)
+        public static IReadOnlyList<int> SquareSumsRow(int n, Metrics? metrics)
         {
             var tree = BuildTree(n);
             if (tree == null)
@@ -95,16 +93,11 @@ namespace SquareSums
                 }
 
                 path.Push(root.Value());
-                Dfs(n, root, path);
+                Dfs(n, root, path, metrics);
                 if (path.Count() == n)
                 {
                     IReadOnlyList<int> result = path.ToVector();
-                    if (_dfsCounter / n > 3)
-                    {
-                        Console.WriteLine("Counter for {0}: {1}", n, _dfsCounter);
-                    }
-
-                    _dfsCounter = 0;
+                    metrics?.FinalizeDfsCounter(n);
                     return result;
                 }
             }

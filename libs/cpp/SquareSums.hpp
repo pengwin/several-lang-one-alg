@@ -9,6 +9,7 @@
 #include "Tree.hpp"
 #include "Path.hpp"
 #include "NodesSorting.hpp"
+#include "Metrics.hpp"
 
 bool is_fair_square(int n)
 {
@@ -48,23 +49,25 @@ Tree *build_tree(int n)
 
 	auto sorting = new NodesSorting(NULL, n);
 	tree->SortPairsWithSorting(sorting);
+	delete sorting;
 	return tree;
 }
 
-int dfsCounter = 0;
-
-void dfs(int n, std::shared_ptr<Node> node, std::shared_ptr<Path> path)
+void dfs(int n, Node *node, Path *path, Metrics *metrics)
 {
-	dfsCounter++;
+	if (metrics != NULL) {
+		metrics->IncrementDfsCounter();
+	}
 	NodesSorting *sorting = new NodesSorting(path, n);
 
-	std::vector<std::shared_ptr<Node>> pairs(node->PairsCount());
-	std::vector<std::shared_ptr<Node>> src = *node->Pairs();
-	std::copy(src.begin(), src.end(), pairs.begin());
+	std::vector<Node *> pairs(node->PairsCount());
+	std::vector<Node *>* src = node->Pairs();
+	std::copy((*src).begin(), (*src).end(), pairs.begin());
 
 	sorting->SortNodes(&pairs);
+	delete sorting;
 
-	for (std::shared_ptr<Node> p : pairs)
+	for (Node *p : pairs)
 	{
 		int v = p->Value();
 
@@ -80,7 +83,7 @@ void dfs(int n, std::shared_ptr<Node> node, std::shared_ptr<Path> path)
 			break;
 		}
 
-		dfs(n, p, path);
+		dfs(n, p, path, metrics);
 		if (path->Count() == n)
 		{
 			break;
@@ -92,7 +95,7 @@ void dfs(int n, std::shared_ptr<Node> node, std::shared_ptr<Path> path)
 	pairs.clear();
 }
 
-std::vector<int> square_sums_row(int n)
+std::vector<int> square_sums_row(int n, Metrics *metrics)
 {
 	Tree *tree = build_tree(n);
 	if (tree == NULL)
@@ -100,23 +103,22 @@ std::vector<int> square_sums_row(int n)
 		return std::vector<int>();
 	}
 
-	for (std::shared_ptr<Node> root : tree->Roots())
+	for (Node *root : *tree->Roots())
 	{
-		std::shared_ptr<Path> path = std::shared_ptr<Path>(new Path(n));
+		Path *path = new Path(n);
 		path->Push(root->Value());
-		dfs(n, root, path);
+		dfs(n, root, path, metrics);
 		if (path->Count() == n)
 		{
 			std::vector<int> result = path->ToVector();
-			path.reset();
-			if (dfsCounter / n > 1)
-			{
-				std::cout << "Counter for " << n << " : " << dfsCounter << "\n";
+			if (metrics != NULL) {
+				metrics->FinalizeDfsCounter(n);
 			}
-			dfsCounter = 0;
+			delete path;
+			delete tree;
 			return result;
 		}
-		path.reset();
+		delete path;
 	}
 	delete tree;
 	return std::vector<int>();

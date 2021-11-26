@@ -2,6 +2,7 @@
 all: build
 
 SHELL = /bin/bash
+TIME=/usr/bin/time --verbose # use gnu-time, not bash builtin time
 
 build: go-bin cpp-bin dotnet-bin js-bin
 	
@@ -18,13 +19,13 @@ js-bin:
 	make -C libs/js build
 
 time-go-bin: go-bin
-	time ./bin/go
+	$(TIME) ./bin/go
 
 time-cpp-bin: cpp-bin
-	time ./bin/cpp
+	$(TIME) ./bin/cpp
 
 time-js-bin: js-bin
-	time node ./bin/nodejs/index-cli.js
+	$(TIME) node ./bin/nodejs/index-cli.js
 
 time-dotnet-bin: dotnet-bin
-	time ./bin/dotnet/SquareSumsCli
+	$(TIME) ./bin/dotnet/SquareSumsCli

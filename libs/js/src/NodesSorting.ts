@@ -12,68 +12,49 @@ function pairsNotInPath(node: Node, path: Path): number {
     return count;
 }
 
-class SortBucket {
-    public value: Node;
-
-    public next?: SortBucket;
-
-    constructor(value: Node) {
-        this.value = value;
-    }
-}
-
 class SortBucketList {
     private _path?: Path;
-    public first?: SortBucket;
+    private list: Array<Node>;
 
     constructor(path?: Path) {
         this._path = path;
+        this.list = [];
+    }
+
+    public nodes() {
+        return this.list;
     }
 
     public addNode(node: Node) {
-        if (this.first == null) {
-            this.first = new SortBucket(node);
-            return;
-        }
-
-        let current = this.first;
-        let prev: SortBucket = null;
-        while (current != null) {
-            let condition: boolean;
+        let found = false;
+        for (let i = 0; i < this.list.length; i++)
+        {
+            var currentNode = this.list[i];
+            let condition = false;
             if (this._path != null) {
                 var a = node.pairsCount();
-                var b = current.value.pairsCount();
+                var b = currentNode.pairsCount();
                 if (a != b) {
                     condition = a < b;
                 }
                 else {
-                    condition = node.value > current.value.value;
+                    condition = node.value > currentNode.value;
                 }
             }
             else {
-                condition = node.value > current.value.value;
+                condition = node.value > currentNode.value;
             }
 
             if (condition) {
-                var next = current;
-                current = new SortBucket(node);
-                current.next = next;
-                if (prev != null) {
-                    prev.next = current;
-                }
-                else {
-                    this.first = current;
-                }
+                this.list.splice(i, 0, node);
+                found = true;
                 break;
             }
-
-            prev = current;
-            current = current.next;
         }
 
         // reached end of list without adding
-        if (current == null && prev != null) {
-            prev.next = new SortBucket(node);
+        if (!found) {
+            this.list.push(node);
         }
     }
 }
@@ -110,10 +91,8 @@ export class NodesSorting {
                 continue;
             }
 
-            var current = list.first;
-            while (current != null) {
-                result.push(current.value);
-                current = current.next;
+            for(let node of list.nodes()) {
+                result.push(node);
             }
         }
         return result;
