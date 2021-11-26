@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using SquareSums;
@@ -14,26 +13,28 @@ namespace Tests
             
             // arrange
             var sorting = new NodesSorting(null, 4);
-            var nodes = new List<Node>();
+            var nodes = new Node[2];
 
             var node = new Node(3);
             node.Add(new Node(2));
             node.Add(new Node(3));
             node.Add(new Node(1));
-            
-            nodes.Add(node);
+            node.FinalizePairs();
+
+            nodes[0] = node;
             
             node = new Node(4);
             node.Add(new Node(2));
             node.Add(new Node(3));
+            node.FinalizePairs();
 
-            nodes.Add(node);
+            nodes[1] = node;
             
             // act
-            var actual = sorting.SortNodes(nodes);
+            sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value).Should().Equal(4, 3);
+            nodes.Select(n => n.Value).Should().Equal(4, 3);
         }
         
         [Fact]
@@ -43,7 +44,7 @@ namespace Tests
             // arrange
             var path = new Path(4);
             var sorting = new NodesSorting(path, 4);
-            var nodes = new List<Node>();
+            var nodes = new Node[2];
             
             path.Push(2);
 
@@ -51,20 +52,22 @@ namespace Tests
             node.Add(new Node(2));
             node.Add(new Node(3));
             node.Add(new Node(1));
+            node.FinalizePairs();
             
-            nodes.Add(node);
+            nodes[0] = node;
             
             node = new Node(4);
             node.Add(new Node(2));
             node.Add(new Node(3));
+            node.FinalizePairs();
 
-            nodes.Add(node);
+            nodes[1] = node;
             
             // act
-            var actual = sorting.SortNodes(nodes);
+            sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value).Should().Equal(4, 3);
+            nodes.Select(n => n.Value).Should().Equal(4, 3);
         }
         
         [Fact]
@@ -74,7 +77,7 @@ namespace Tests
             // arrange
             var path = new Path(9);
             var sorting = new NodesSorting(path, 9);
-            var nodes = new List<Node>();
+            var nodes = new Node[3];
             
             path.Push(2);
             path.Push(8);
@@ -83,27 +86,30 @@ namespace Tests
             var node = new Node(3);
             node.Add(new Node(2));
             node.Add(new Node(3));
+            node.FinalizePairs();
 
-            nodes.Add(node);
+            nodes[0] = node;
             
             node = new Node(4);
             node.Add(new Node(2));
             node.Add(new Node(3));
+            node.FinalizePairs();
             
-            nodes.Add(node);
+            nodes[1] = node;
             
             node = new Node(7);
             node.Add(new Node(8));
             node.Add(new Node(9));
             node.Add(new Node(5));
+            node.FinalizePairs();
 
-            nodes.Add(node);
+            nodes[2] = node;
             
             // act
-            var actual = sorting.SortNodes(nodes);
+            sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value).Should().Equal(4, 3, 7);
+            nodes.Select(n => n.Value).Should().Equal(4, 3, 7);
         }
         
         [Fact]
@@ -113,7 +119,7 @@ namespace Tests
             // arrange
             var path = new Path(9);
             var sorting = new NodesSorting(path, 9);
-            var nodes = new List<Node>();
+            var nodes = new Node[3];
             
             path.Push(2);
             path.Push(8);
@@ -123,27 +129,30 @@ namespace Tests
             node.Add(new Node(2));
             node.Add(new Node(3));
             node.Add(new Node(4));
+            node.FinalizePairs();
 
-            nodes.Add(node);
+            nodes[0] = node;
             
             node = new Node(4);
             node.Add(new Node(2));
             node.Add(new Node(3));
+            node.FinalizePairs();
             
-            nodes.Add(node);
+            nodes[1] = node;
             
             node = new Node(7);
             node.Add(new Node(8));
             node.Add(new Node(9));
             node.Add(new Node(5));
+            node.FinalizePairs();
 
-            nodes.Add(node);
+            nodes[2] = node;
             
             // act
-            var actual = sorting.SortNodes(nodes);
+            sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value).Should().Equal(4, 7, 3);
+            nodes.Select(n => n.Value).Should().Equal(4, 7, 3);
         }
         
         [Fact]
@@ -152,37 +161,41 @@ namespace Tests
             
             // arrange
             var sorting = new NodesSorting(null, 4);
-            var nodes = new List<Node>();
+            var nodes = new Node[4];
 
             var node = new Node(3); // 3 children
             node.Add(new Node(2));
             node.Add(new Node(3));
             node.Add(new Node(1));
+            node.FinalizePairs();
             
-            nodes.Add(node);
+            nodes[0] = node;
             
             node = new Node(4);  // 2 children
             node.Add(new Node(2));
             node.Add(new Node(3));
+            node.FinalizePairs();
 
-            nodes.Add(node);
+            nodes[1] = node;
             
             node = new Node(1);
             node.Add(new Node(2));
             node.Add(new Node(3));
+            node.FinalizePairs();
 
-            nodes.Add(node);
+            nodes[2] = node;
             
             node = new Node(2);
             node.Add(new Node(3));
+            node.FinalizePairs();
 
-            nodes.Add(node);
+            nodes[3] = node;
             
             // act
-            var actual = sorting.SortNodes(nodes);
+            sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value).Should().Equal(2, 4, 1, 3);
+            nodes.Select(n => n.Value).Should().Equal(2, 4, 1, 3);
         }
         
         [Fact]
@@ -191,32 +204,35 @@ namespace Tests
             
             // arrange
             var sorting = new NodesSorting(null, 4);
-            var nodes = new List<Node>();
+            var nodes = new Node[3];
 
             var node = new Node(3); // 3 children
             node.Add(new Node(2));
             node.Add(new Node(3));
             node.Add(new Node(1));
+            node.FinalizePairs();
             
-            nodes.Add(node);
+            nodes[0] = node;
             
-            node = new Node(1);
+            node = new Node(1); // 2 children
             node.Add(new Node(2));
             node.Add(new Node(3));
+            node.FinalizePairs();
 
-            nodes.Add(node);
+            nodes[1] = node;
             
             node = new Node(4);  // 2 children
             node.Add(new Node(2));
             node.Add(new Node(3));
+            node.FinalizePairs();
 
-            nodes.Add(node);
+            nodes[2] = node;
             
             // act
-            var actual = sorting.SortNodes(nodes);
+            sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value).Should().Equal(4, 1, 3);
+            nodes.Select(n => n.Value).Should().Equal(4, 1, 3);
         }
     }
 }

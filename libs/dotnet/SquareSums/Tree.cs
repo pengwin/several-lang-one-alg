@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+// ReSharper disable ForCanBeConvertedToForeach
 
 namespace SquareSums
 {
@@ -36,47 +36,48 @@ namespace SquareSums
             Node tailNode = GetOrCreate(tail);
             headNode.Add(tailNode);
         }
-
-        public bool VerifyAllNodesHavePairs()
-        {
-            foreach (var n in _nodes)
-            {
-                if (n == null)
-                {
-                    return false;
-                }
-
-                if (n.PairsCount == 0)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /*public void SortPairs()
-        {
-            foreach (var n in _nodes)
-            {
-                n.SortPairs();
-            }
-
-            Array.Sort(_nodes, Node.CompareNodes);
-        }*/
-
+        
         public void SortPairsUsing(NodesSorting sorting)
         {
-            foreach (var n in _nodes)
+            for (var i = 0; i < _nodes.Length; i++)
             {
+                var n = _nodes[i];
                 if (n == null)
                 {
                     throw new Exception("Unexpected null node");
                 }
+
                 n.SortPairsUsing(sorting);
             }
 
-            _nodes = sorting.SortNodes(_nodes!).ToArray();
+            sorting.SortNodes(_nodes!);
+        }
+
+        public bool FinalizePairsAndVerifyAllNodesHavePairs()
+        {
+            for (var i = 0; i < _nodes.Length; i++)
+            {
+                var node = _nodes[i];
+                if (node == null)
+                {
+                    return false;
+                }
+                
+                node.FinalizePairs();
+                
+                if (node.PairsCount == 0)
+                {
+                    return false;
+                }
+
+                for (var j = 0; j < node.Pairs.Length; j++)
+                {
+                    var pair = node.Pairs[j];
+                    pair.FinalizePairs();
+                }
+            }
+
+            return true;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace SquareSums
             return _attached[n];
         }
 
-        public int Count() => _count;
+        public int Count => _count;
 
         public void Push(int n)
         {

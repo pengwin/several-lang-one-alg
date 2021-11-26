@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SquareSums
 {
@@ -7,7 +7,7 @@ namespace SquareSums
     class SortBucketList
     {
         private readonly Path? _path;
-        private List<Node> _list;
+        private readonly List<Node> _list;
 
         public SortBucketList(Path? path)
         {
@@ -15,7 +15,7 @@ namespace SquareSums
             _list = new List<Node>();
         }
 
-        public IEnumerable<Node> Nodes() => _list;
+        public IReadOnlyList<Node> Nodes => _list;
 
         public void AddNode(Node node)
         {
@@ -69,11 +69,11 @@ namespace SquareSums
             _maxN = maxN;
         }
         
-        public IEnumerable<Node> SortNodes(IReadOnlyList<Node> nodes)
+        public void SortNodes(Span<Node> nodes)
         {
             var sortList = new SortBucketList?[_maxN + 1];
 
-            for (int i = 0; i < nodes.Count; i++)
+            for (int i = 0; i < nodes.Length; i++)
             {
                 var node = nodes[i];
                 var pairsCount = _path == null ? node.PairsCount : PairsNotInPath(node);
@@ -89,17 +89,20 @@ namespace SquareSums
                 sortList[pairsCount] = list;
             }
 
-            for (var index = 0; index < sortList.Length; index++)
+            var targetPos = 0;
+            for (var i = 0; i < sortList.Length; i++)
             {
-                var list = sortList[index];
+                var list = sortList[i];
                 if (list == null)
                 {
                     continue;
                 }
 
-                foreach (var node in list.Nodes())
+                for (var j = 0; j < list.Nodes.Count; j++)
                 {
-                    yield return node;
+                    var node = list.Nodes[j];
+                    nodes[targetPos] = node;
+                    targetPos++;
                 }
             }
         }
@@ -110,7 +113,18 @@ namespace SquareSums
             {
                 return n.PairsCount;
             }
-            return n.Pairs.Count(nn => !_path.Contains(nn.Value));
+
+            var count = 0;
+            for (var i = 0; i < n.Pairs.Length; i++)
+            {
+                var nn = n.Pairs[i];
+                if (!_path.Contains(nn.Value))
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }

@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace SquareSums
 {
     public static class Calculator
     {
-        private static bool IsFairSquare(int n)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsFairSquare(int n)
         {
             double sqrtVal = Math.Sqrt(n);
             return sqrtVal - Math.Floor(sqrtVal) == 0;
@@ -35,7 +36,7 @@ namespace SquareSums
                 }
             }
 
-            if (!tree.VerifyAllNodesHavePairs())
+            if (!tree.FinalizePairsAndVerifyAllNodesHavePairs())
             {
                 return null;
             }
@@ -48,10 +49,11 @@ namespace SquareSums
         {
             metrics?.IncrementDfsCounter();
             var sorting = new NodesSorting(path, n);
-            var pairs = sorting.SortNodes(node.Pairs).ToArray();
+            sorting.SortNodes(node.Pairs);
 
-            foreach (var p in pairs)
+            for (var i = 0; i < node.Pairs.Length; i++)
             {
+                var p = node.Pairs[i];
                 int v = p.Value;
 
                 if (path.Contains(v))
@@ -61,13 +63,13 @@ namespace SquareSums
 
                 path.Push(v);
 
-                if (path.Count() == n)
+                if (path.Count == n)
                 {
                     break;
                 }
 
                 Dfs(n, p, path, metrics);
-                if (path.Count() == n)
+                if (path.Count == n)
                 {
                     break;
                 }
@@ -84,8 +86,10 @@ namespace SquareSums
                 return Array.Empty<int>();
             }
 
-            foreach (var root in tree.Roots())
+            var list = tree.Roots();
+            for (var i = 0; i < list.Count; i++)
             {
+                var root = list[i];
                 var path = new Path(n);
                 if (root == null)
                 {
@@ -94,7 +98,7 @@ namespace SquareSums
 
                 path.Push(root.Value);
                 Dfs(n, root, path, metrics);
-                if (path.Count() == n)
+                if (path.Count == n)
                 {
                     IReadOnlyList<int> result = path.ToVector();
                     metrics?.FinalizeDfsCounter(n);

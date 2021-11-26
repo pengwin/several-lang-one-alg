@@ -4,7 +4,7 @@
   "description": "",
   "main": "sums.js",
   "scripts": {
-    "build-cli": "tsc --build ./tsconfig-cli.json",
+    "build-cli": "tsc --outDir ../../bin/nodejs --target es2016 --module none --excludeFiles **/*.test.ts",
     "test": "jest ./src/*.test.ts"
   },
   "author": "",

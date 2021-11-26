@@ -8,7 +8,7 @@ namespace SquareSums
         private readonly bool _printProgress;
         private readonly Dictionary<int, int> _dfsCounterMap = new();
         
-        private int _dfsCounter = 0;
+        private int _dfsCounter;
         
         public Metrics(bool printProgress)
         {
