@@ -46,7 +46,7 @@ namespace SquareSums
                     return false;
                 }
 
-                if (n.PairsCount() == 0)
+                if (n.PairsCount == 0)
                 {
                     return false;
                 }

@@ -33,8 +33,7 @@ namespace Tests
             var actual = sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value())
-                .Should().Equal(4, 3);
+            actual.Select(n => n.Value).Should().Equal(4, 3);
         }
         
         [Fact]
@@ -65,8 +64,7 @@ namespace Tests
             var actual = sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value())
-                .Should().Equal(4, 3);
+            actual.Select(n => n.Value).Should().Equal(4, 3);
         }
         
         [Fact]
@@ -105,8 +103,7 @@ namespace Tests
             var actual = sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value())
-                .Should().Equal(4, 3, 7);
+            actual.Select(n => n.Value).Should().Equal(4, 3, 7);
         }
         
         [Fact]
@@ -146,8 +143,7 @@ namespace Tests
             var actual = sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value())
-                .Should().Equal(4, 7, 3);
+            actual.Select(n => n.Value).Should().Equal(4, 7, 3);
         }
         
         [Fact]
@@ -186,8 +182,7 @@ namespace Tests
             var actual = sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value())
-                .Should().Equal(2, 4, 1, 3);
+            actual.Select(n => n.Value).Should().Equal(2, 4, 1, 3);
         }
         
         [Fact]
@@ -221,8 +216,7 @@ namespace Tests
             var actual = sorting.SortNodes(nodes);
             
             // assert
-            actual.Select(n => n.Value())
-                .Should().Equal(4, 1, 3);
+            actual.Select(n => n.Value).Should().Equal(4, 1, 3);
         }
     }
 }

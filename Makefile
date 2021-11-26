@@ -19,13 +19,24 @@ js-bin:
 	make -C libs/js build
 
 time-go-bin: go-bin
-	$(TIME) ./bin/go
+	mkdir -p ./metrics
+	echo '' > ./metrics/go.txt
+	$(TIME) ./bin/go 2>&1 | tee -a ./metrics/go.txt
 
 time-cpp-bin: cpp-bin
-	$(TIME) ./bin/cpp
+	mkdir -p ./metrics
+	echo '' > ./metrics/cpp.txt
+	$(TIME) ./bin/cpp 2>&1 | tee -a ./metrics/cpp.txt
 
 time-js-bin: js-bin
-	$(TIME) node ./bin/nodejs/index-cli.js
+	mkdir -p ./metrics
+	echo '' > ./metrics/js.txt
+	$(TIME) node ./bin/nodejs/index-cli.js 2>&1 | tee -a ./metrics/js.txt
 
 time-dotnet-bin: dotnet-bin
-	$(TIME) ./bin/dotnet/SquareSumsCli
+	mkdir -p ./metrics
+	echo '' > ./metrics/dotnet.txt
+	$(TIME) ./bin/dotnet/SquareSumsCli 2>&1 | tee -a ./metrics/dotnet.txt
+
+time-bin: time-dotnet-bin time-go-bin time-js-bin time-cpp-bin
+

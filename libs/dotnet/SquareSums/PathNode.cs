@@ -11,14 +11,8 @@ namespace SquareSums
             _prev = prevNode;
         }
 
-        public int Value()
-        {
-            return _value;
-        }
+        public int Value => _value;
 
-        public PathNode? Prev()
-        {
-            return _prev;
-        }
+        public PathNode? Prev => _prev;
     };
 }

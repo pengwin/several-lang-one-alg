@@ -48,11 +48,11 @@ namespace SquareSums
         {
             metrics?.IncrementDfsCounter();
             var sorting = new NodesSorting(path, n);
-            var pairs = sorting.SortNodes(node.Pairs()).ToArray();
+            var pairs = sorting.SortNodes(node.Pairs).ToArray();
 
             foreach (var p in pairs)
             {
-                int v = p.Value();
+                int v = p.Value;
 
                 if (path.Contains(v))
                 {
@@ -92,7 +92,7 @@ namespace SquareSums
                     throw new NullReferenceException("Unexpected null");
                 }
 
-                path.Push(root.Value());
+                path.Push(root.Value);
                 Dfs(n, root, path, metrics);
                 if (path.Count() == n)
                 {

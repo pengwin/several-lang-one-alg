@@ -16,20 +16,10 @@ namespace SquareSums
         }
 
 
-        public int Value()
-        {
-            return _value;
-        }
+        public int Value => _value;
 
-        public IReadOnlyList<Node> Pairs()
-        {
-            return _pairs;
-        }
+        public IReadOnlyList<Node> Pairs => _pairs;
 
-        /*public void SortPairs()
-        {
-            _pairs.Sort(CompareNodes);
-        }*/
         
         public void SortPairsUsing(NodesSorting sorting)
         {
@@ -41,27 +31,7 @@ namespace SquareSums
             _pairs.Add(node);
         }
 
-        public int PairsCount()
-        {
-            return _pairs.Count;
-        }
+        public int PairsCount => _pairs.Count;
 
-        public static int CompareNodes(Node? i, Node? j)
-        {
-            if (i == null || j == null)
-            {
-                return 0;
-            }
-
-            int a = i.PairsCount();
-            int b = j.PairsCount();
-
-            if (a != b)
-            {
-                return a.CompareTo(b);
-            }
-
-            return j.Value().CompareTo(i.Value());
-        }
     };
 }

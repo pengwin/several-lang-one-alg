@@ -10,7 +10,7 @@ func main() {
 	/*sums.SquareSumsRow(279)
 	return*/
 
-	for n := 0; n < 2000; n++ {
+	for n := 0; n <= 2000; n++ {
 		a := sums.SquareSumsRow(n, metrics)
 		if a == nil {
 			// no

@@ -26,20 +26,20 @@ namespace SquareSums
                 bool condition;
                 if (_path != null)
                 {
-                    var a = node.PairsCount();
-                    var b = currentNode.PairsCount();
+                    var a = node.PairsCount;
+                    var b = currentNode.PairsCount;
                     if (a != b)
                     {
                         condition = a < b;
                     }
                     else
                     {
-                        condition = node.Value() > currentNode.Value();
+                        condition = node.Value > currentNode.Value;
                     }
                 }
                 else
                 {
-                    condition = node.Value() > currentNode.Value();
+                    condition = node.Value > currentNode.Value;
                 }
 
                 if (condition)
@@ -76,7 +76,7 @@ namespace SquareSums
             for (int i = 0; i < nodes.Count; i++)
             {
                 var node = nodes[i];
-                var pairsCount = _path == null ? node.PairsCount() : PairsNotInPath(node);
+                var pairsCount = _path == null ? node.PairsCount : PairsNotInPath(node);
 
                 var list = sortList[pairsCount];
                 if (list == null)
@@ -108,9 +108,9 @@ namespace SquareSums
         {
             if (_path == null)
             {
-                return n.PairsCount();
+                return n.PairsCount;
             }
-            return n.Pairs().Count(nn => !_path.Contains(nn.Value()));
+            return n.Pairs.Count(nn => !_path.Contains(nn.Value));
         }
     }
 }

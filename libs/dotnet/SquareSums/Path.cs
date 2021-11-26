@@ -9,17 +9,6 @@ namespace SquareSums
         private int _count;
         private readonly bool[] _attached;
 
-        private IReadOnlyList<int> ToVector(PathNode? node, List<int> v)
-        {
-            while (node != null)
-            {
-                v.Add(node.Value());
-                node = node.Prev();
-            }
-
-            return v;
-        }
-
         public Path(int capacity)
         {
             _count = 0;
@@ -36,10 +25,7 @@ namespace SquareSums
             return _attached[n];
         }
 
-        public int Count()
-        {
-            return _count;
-        }
+        public int Count() => _count;
 
         public void Push(int n)
         {
@@ -62,8 +48,8 @@ namespace SquareSums
                 return;
             }
 
-            _attached[_last.Value()] = false;
-            var prev = _last.Prev();
+            _attached[_last.Value] = false;
+            var prev = _last.Prev;
             _last = prev;
             _count--;
         }
@@ -71,6 +57,17 @@ namespace SquareSums
         public IReadOnlyList<int> ToVector()
         {
             return ToVector(_last, new List<int>());
+        }
+
+        private IReadOnlyList<int> ToVector(PathNode? node, List<int> v)
+        {
+            while (node != null)
+            {
+                v.Add(node.Value);
+                node = node.Prev;
+            }
+
+            return v;
         }
     }
 }

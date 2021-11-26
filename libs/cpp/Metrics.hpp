@@ -78,9 +78,9 @@ class Metrics
             }
 
             std::cout << "Normal (*<=n) dfs cases count: " << normalCounter << "/" << maxN << "\n";
-            std::cout << "Average (n<*<3n) dfs cases count " << averageCounter<< "/" <<maxN<< "\n";
-            std::cout << "Bad dfs (*>3n) cases count " << badCounter<< "/" <<maxN<< "\n";
-            std::cout << "Worst dfs case " << worst << " for " << worstN << "\n";
+            std::cout << "Average (n<*<3n) dfs cases count: " << averageCounter<< "/" <<maxN<< "\n";
+            std::cout << "Bad dfs (*>3n) cases count: " << badCounter<< "/" <<maxN<< "\n";
+            std::cout << "Worst dfs case: " << worst << " for " << worstN << "\n";
         }
     };
 
