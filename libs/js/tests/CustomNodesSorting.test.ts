@@ -1,10 +1,10 @@
-import { NodesSorting } from './NodesSorting';
-import { Node } from './Node';
-import { Path } from './Path';
+import { CustomNodesSorting } from '../src/CustomNodesSorting';
+import { Node } from '../src/Node';
+import { Path } from '../src/Path';
 
 test('WithoutPath_WithoutCollision', () => {
     // arrange
-    var sorting = new NodesSorting(null, 4);
+    var sorting = new CustomNodesSorting(null, 4);
     var nodes: Array<Node> = [];
 
     let node = new Node(3);
@@ -21,16 +21,16 @@ test('WithoutPath_WithoutCollision', () => {
     nodes.push(node);
 
     // act
-    var actual = sorting.sortNodes(nodes);
+    sorting.sortNodes(nodes);
 
     // assert
-    expect(actual.map(n => n.value)).toStrictEqual([4, 3]);
+    expect(nodes.map(n => n.value)).toStrictEqual([4, 3]);
 });
 
 test('WithPath_WithoutCollision', () => {
     // arrange
     var path = new Path(4);
-    var sorting = new NodesSorting(path, 4);
+    var sorting = new CustomNodesSorting(path, 4);
     var nodes: Array<Node> = [];
 
     path.push(2);
@@ -49,16 +49,16 @@ test('WithPath_WithoutCollision', () => {
     nodes.push(node);
 
     // act
-    var actual = sorting.sortNodes(nodes);
+    sorting.sortNodes(nodes);
 
     // assert
-    expect(actual.map(n => n.value)).toStrictEqual([4, 3]);
+    expect(nodes.map(n => n.value)).toStrictEqual([4, 3]);
 });
 
 test('WithPath_WithCollision_onAllItems', () => {
     // arrange
     var path = new Path(9);
-    var sorting = new NodesSorting(path, 9);
+    var sorting = new CustomNodesSorting(path, 9);
     var nodes: Array<Node> = [];
 
     path.push(2);
@@ -85,16 +85,16 @@ test('WithPath_WithCollision_onAllItems', () => {
     nodes.push(node);
 
     // act
-    var actual = sorting.sortNodes(nodes);
+    sorting.sortNodes(nodes);
 
     // assert
-    expect(actual.map(n => n.value)).toStrictEqual([4, 3, 7]);
+    expect(nodes.map(n => n.value)).toStrictEqual([4, 3, 7]);
 });
 
 test('WithPath_WithCollision_OnTwoItems', () => {
     // arrange
     var path = new Path(9);
-    var sorting = new NodesSorting(path, 9);
+    var sorting = new CustomNodesSorting(path, 9);
     var nodes: Array<Node> = [];
 
     path.push(2);
@@ -122,15 +122,15 @@ test('WithPath_WithCollision_OnTwoItems', () => {
     nodes.push(node);
 
     // act
-    var actual = sorting.sortNodes(nodes);
+    sorting.sortNodes(nodes);
 
     // assert
-    expect(actual.map(n => n.value)).toStrictEqual([4, 7, 3]);
+    expect(nodes.map(n => n.value)).toStrictEqual([4, 7, 3]);
 });
 
 test('WithoutPath_WitCollision', () => {
     // arrange
-    var sorting = new NodesSorting(null, 4);
+    var sorting = new CustomNodesSorting(null, 4);
     var nodes: Array<Node> = [];
 
     var node = new Node(3); // 3 children
@@ -158,15 +158,15 @@ test('WithoutPath_WitCollision', () => {
     nodes.push(node);
 
     // act
-    var actual = sorting.sortNodes(nodes);
+    sorting.sortNodes(nodes);
 
     // assert
-    expect(actual.map(n => n.value)).toStrictEqual([2, 4, 1, 3]);
+    expect(nodes.map(n => n.value)).toStrictEqual([2, 4, 1, 3]);
 });
 
 test('WithoutPath_WitCollision_SetFirst', () => {
     // arrange
-    var sorting = new NodesSorting(null, 4);
+    var sorting = new CustomNodesSorting(null, 4);
     var nodes: Array<Node> = [];
 
     var node = new Node(3); // 3 children
@@ -189,8 +189,8 @@ test('WithoutPath_WitCollision_SetFirst', () => {
     nodes.push(node);
 
     // act
-    var actual = sorting.sortNodes(nodes);
+    sorting.sortNodes(nodes);
 
     // assert
-    expect(actual.map(n => n.value)).toStrictEqual([4, 1, 3]);
+    expect(nodes.map(n => n.value)).toStrictEqual([4, 1, 3]);
 });

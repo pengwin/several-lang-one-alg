@@ -1,7 +1,7 @@
 import { Tree } from './Tree';
 import { Node } from './Node';
 import { Path } from './Path';
-import { NodesSorting } from './NodesSorting';
+import { NodesSorting, NodesSortingFactory } from './NodesSorting';
 import { Metrics } from './Metrics';
 
 function isFairSquare(n: number) {
@@ -9,7 +9,7 @@ function isFairSquare(n: number) {
     return sqrtVal - Math.floor(sqrtVal) == 0;
 }
 
-function buildTree(n: number) {
+function buildTree(n: number, sorting: NodesSorting) {
     let tree = new Tree(n);
 
     for (let i = 1; i <= n; i++) {
@@ -31,18 +31,16 @@ function buildTree(n: number) {
         return false;
     }
 
-    let sorting = new NodesSorting(null, n);
     tree.sortPairsWithSorting(sorting);
     return tree;
 }
 
-function dfs(n: number, node: Node, path: Path, metrics?: Metrics) {
+function dfs(n: number, node: Node, path: Path, metrics: Metrics | null, sorting: NodesSorting) {
     metrics?.incrementDfsCounter();
 
-    let sorting = new NodesSorting(path, n);
-    let pairs = sorting.sortNodes(node.pairs);
+    sorting.sortNodes(node.pairs);
 
-    for (let p of pairs) {
+    for (let p of node.pairs) {
         let v = p.value;
 
         if (path.contains(v)) {
@@ -55,7 +53,7 @@ function dfs(n: number, node: Node, path: Path, metrics?: Metrics) {
             break;
         }
 
-        dfs(n, p, path, metrics);
+        dfs(n, p, path, metrics, sorting);
         if (path.count == n) {
             break;
         }
@@ -64,16 +62,18 @@ function dfs(n: number, node: Node, path: Path, metrics?: Metrics) {
     }
 }
 
-export function squareSumsRow(n: number, metrics?: Metrics) {
-    let tree = buildTree(n);
+export function squareSumsRow(n: number, metrics: Metrics | null, sortingFactory: NodesSortingFactory) {
+    let sortingForTree = sortingFactory(null, n);
+    let tree = buildTree(n, sortingForTree);
     if (!tree) {
         return false;
     }
 
     for (let root of tree.nodes) {
-        var path = new Path(n);
+        const path = new Path(n);
+        const sorting = sortingFactory(path, n);
         path.push(root.value);
-        dfs(n, root, path, metrics);
+        dfs(n, root, path, metrics, sorting);
         if (path.count == n) {
             let result = path.toVector();
             metrics.finalizeDfsCounter(n);

@@ -17,7 +17,7 @@ bool is_fair_square(int n)
 	return sqrtVal - floor(sqrtVal) == 0;
 }
 
-Tree *build_tree(int n)
+Tree *build_tree(int n, NodesSorting *sorting)
 {
 	Tree *tree = new Tree(n);
 
@@ -47,27 +47,19 @@ Tree *build_tree(int n)
 		return NULL;
 	}
 
-	auto sorting = new NodesSorting(NULL, n);
 	tree->SortPairsWithSorting(sorting);
-	delete sorting;
 	return tree;
 }
 
-void dfs(int n, Node *node, Path *path, Metrics *metrics)
+void dfs(int n, Node *node, Path *path, Metrics *metrics, NodesSorting *sorting)
 {
 	if (metrics != NULL) {
 		metrics->IncrementDfsCounter();
 	}
-	NodesSorting *sorting = new NodesSorting(path, n);
 
-	std::vector<Node *> pairs(node->PairsCount());
-	std::vector<Node *>* src = node->Pairs();
-	std::copy((*src).begin(), (*src).end(), pairs.begin());
+	sorting->SortNodes(node->Pairs());
 
-	sorting->SortNodes(&pairs);
-	delete sorting;
-
-	for (Node *p : pairs)
+	for (Node *p : *node->Pairs())
 	{
 		int v = p->Value();
 
@@ -83,7 +75,7 @@ void dfs(int n, Node *node, Path *path, Metrics *metrics)
 			break;
 		}
 
-		dfs(n, p, path, metrics);
+		dfs(n, p, path, metrics, sorting);
 		if (path->Count() == n)
 		{
 			break;
@@ -91,13 +83,13 @@ void dfs(int n, Node *node, Path *path, Metrics *metrics)
 
 		path->Pop();
 	}
-
-	pairs.clear();
 }
 
 std::vector<int> square_sums_row(int n, Metrics *metrics)
 {
-	Tree *tree = build_tree(n);
+	NodesSorting * sorting = new NodesSorting(NULL, n);
+	Tree *tree = build_tree(n, sorting);
+	delete sorting;
 	if (tree == NULL)
 	{
 		return std::vector<int>();
@@ -106,8 +98,9 @@ std::vector<int> square_sums_row(int n, Metrics *metrics)
 	for (Node *root : *tree->Roots())
 	{
 		Path *path = new Path(n);
+		NodesSorting * sorting = new NodesSorting(path, n);
 		path->Push(root->Value());
-		dfs(n, root, path, metrics);
+		dfs(n, root, path, metrics, sorting);
 		if (path->Count() == n)
 		{
 			std::vector<int> result = path->ToVector();
@@ -116,8 +109,10 @@ std::vector<int> square_sums_row(int n, Metrics *metrics)
 			}
 			delete path;
 			delete tree;
+			delete sorting;
 			return result;
 		}
+		delete sorting;
 		delete path;
 	}
 	delete tree;

@@ -16,3 +16,11 @@ wasm:
 	mkdir -p $(OUT_DIR_WASM)
 	GOOS=js GOARCH=wasm go build -o $(OUTPUT_WASM) cmd/wasm/main.go 
 	cp $(GOROOT)/misc/wasm/wasm_exec.js $(OUTPUT_WASM_EXEC)
+
+pprof-svg:
+	GOGC=off go test -bench=BenchmarkSimpleOneShot -cpuprofile cpu.out ./tests
+	go tool pprof -svg tests.test cpu.out > cpu.svg
+
+pprof:
+	GOGC=off go test -bench=BenchmarkSimpleOneShot -cpuprofile cpu.out ./tests
+	go tool pprof tests.test cpu.out

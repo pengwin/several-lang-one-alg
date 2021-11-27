@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SquareSums
 {
-    internal class Path
+    public class Path
     {
         private PathNode? _last;
         private int _count;

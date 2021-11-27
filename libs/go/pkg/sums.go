@@ -9,7 +9,7 @@ func IsFairSquare(n int) bool {
 	return sqrt-math.Floor(sqrt) == 0
 }
 
-func buildTree(n int) *Tree {
+func buildTree(n int, sorting NodesSorting) *Tree {
 	tree := NewTree(n)
 
 	for i := 1; i <= n; i++ {
@@ -31,21 +31,19 @@ func buildTree(n int) *Tree {
 		return nil
 	}
 
-	sorting := NewNodesSorting(nil, n)
 	tree.SortPairsWithSorting(sorting)
 	return tree
 }
 
-func dfs(n int, node *Node, path *Path, metrics *Metrics) {
+func dfs(n int, node *Node, path *Path, metrics *Metrics, sorting NodesSorting) {
 
 	if metrics != nil {
 		metrics.IncrementDfsCounter()
 	}
-	sorting := NewNodesSorting(path, n)
 
-	pairs := sorting.SortNodes(node.Pairs())
+	sorting.SortNodes(node.Pairs())
 
-	for _, p := range pairs {
+	for _, p := range node.Pairs() {
 		v := p.Value()
 
 		if path.Contains(v) {
@@ -58,7 +56,7 @@ func dfs(n int, node *Node, path *Path, metrics *Metrics) {
 			return
 		}
 
-		dfs(n, p, path, metrics)
+		dfs(n, p, path, metrics, sorting)
 		if path.Count() == n {
 			return
 		}
@@ -67,16 +65,18 @@ func dfs(n int, node *Node, path *Path, metrics *Metrics) {
 	}
 }
 
-func SquareSumsRow(n int, metrics *Metrics) []int {
-	tree := buildTree(n)
+func SquareSumsRow(n int, metrics *Metrics, sortingFactory NodesSortingFactory) []int {
+	sorting := sortingFactory(nil, n)
+	tree := buildTree(n, sorting)
 	if tree == nil {
 		return nil
 	}
 
 	for _, root := range tree.Roots() {
 		path := NewPath(n)
+		sorting := sortingFactory(path, n)
 		path.Push(root.Value())
-		dfs(n, root, path, metrics)
+		dfs(n, root, path, metrics, sorting)
 		if path.Count() == n {
 			if metrics != nil {
 				metrics.FinalizeDfsCounter(n)

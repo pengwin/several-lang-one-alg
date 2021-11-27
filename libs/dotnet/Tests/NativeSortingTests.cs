@@ -5,14 +5,14 @@ using Xunit;
 
 namespace Tests
 {
-    public class SortingTests
+    public class NativeSortingTests
     {
         [Fact]
         public void WithoutPath_WithoutCollision()
         {
             
             // arrange
-            var sorting = new NodesSorting(null, 4);
+            var sorting = new NativeNodesSorting(null, 4);
             var nodes = new Node[2];
 
             var node = new Node(3);
@@ -43,7 +43,7 @@ namespace Tests
             
             // arrange
             var path = new Path(4);
-            var sorting = new NodesSorting(path, 4);
+            var sorting = new NativeNodesSorting(path, 4);
             var nodes = new Node[2];
             
             path.Push(2);
@@ -76,7 +76,7 @@ namespace Tests
             
             // arrange
             var path = new Path(9);
-            var sorting = new NodesSorting(path, 9);
+            var sorting = new NativeNodesSorting(path, 9);
             var nodes = new Node[3];
             
             path.Push(2);
@@ -118,7 +118,7 @@ namespace Tests
             
             // arrange
             var path = new Path(9);
-            var sorting = new NodesSorting(path, 9);
+            var sorting = new NativeNodesSorting(path, 9);
             var nodes = new Node[3];
             
             path.Push(2);
@@ -160,7 +160,7 @@ namespace Tests
         {
             
             // arrange
-            var sorting = new NodesSorting(null, 4);
+            var sorting = new NativeNodesSorting(null, 4);
             var nodes = new Node[4];
 
             var node = new Node(3); // 3 children
@@ -203,7 +203,7 @@ namespace Tests
         {
             
             // arrange
-            var sorting = new NodesSorting(null, 4);
+            var sorting = new NativeNodesSorting(null, 4);
             var nodes = new Node[3];
 
             var node = new Node(3); // 3 children

@@ -6,6 +6,8 @@ namespace SquareSums
 {
     public static class Calculator
     {
+        public delegate INodesSorting NodesSortingFactory(Path? path, int maxN);
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFairSquare(int n)
         {
@@ -13,7 +15,7 @@ namespace SquareSums
             return sqrtVal - Math.Floor(sqrtVal) == 0;
         }
 
-        private static Tree? BuildTree(int n)
+        private static Tree? BuildTree(int n, INodesSorting sorting)
         {
             Tree tree = new Tree(n);
 
@@ -41,14 +43,14 @@ namespace SquareSums
                 return null;
             }
             
-            tree.SortPairsUsing(new NodesSorting(null, n));
+            tree.SortPairsUsing(sorting);
             return tree;
         }
 
-        private static void Dfs(int n, Node node, Path path, Metrics? metrics)
+        private static void Dfs(int n, Node node, Path path, Metrics? metrics, INodesSorting nodesSorting)
         {
             metrics?.IncrementDfsCounter();
-            var sorting = new NodesSorting(path, n);
+            var sorting = new CustomNodesSorting(path, n);
             sorting.SortNodes(node.Pairs);
 
             for (var i = 0; i < node.Pairs.Length; i++)
@@ -68,7 +70,7 @@ namespace SquareSums
                     break;
                 }
 
-                Dfs(n, p, path, metrics);
+                Dfs(n, p, path, metrics, nodesSorting);
                 if (path.Count == n)
                 {
                     break;
@@ -78,9 +80,10 @@ namespace SquareSums
             }
         }
 
-        public static IReadOnlyList<int> SquareSumsRow(int n, Metrics? metrics)
+        public static IReadOnlyList<int> SquareSumsRow(int n, Metrics? metrics, NodesSortingFactory sortingFactory)
         {
-            var tree = BuildTree(n);
+            var sortingForTree = sortingFactory(null, n);
+            var tree = BuildTree(n, sortingForTree);
             if (tree == null)
             {
                 return Array.Empty<int>();
@@ -91,13 +94,14 @@ namespace SquareSums
             {
                 var root = list[i];
                 var path = new Path(n);
+                var sorting = sortingFactory(path, n);
                 if (root == null)
                 {
                     throw new NullReferenceException("Unexpected null");
                 }
 
                 path.Push(root.Value);
-                Dfs(n, root, path, metrics);
+                Dfs(n, root, path, metrics, sorting);
                 if (path.Count == n)
                 {
                     IReadOnlyList<int> result = path.ToVector();

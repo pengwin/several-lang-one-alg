@@ -4,8 +4,8 @@
   "description": "",
   "main": "sums.js",
   "scripts": {
-    "build-cli": "tsc --outDir ../../bin/nodejs --target es2016 --module none --excludeFiles **/*.test.ts",
-    "test": "jest ./src/*.test.ts"
+    "build-cli": "tsc --outDir ../../bin/nodejs --target es2016 --module none",
+    "test": "jest ./tests/*.test.ts"
   },
   "author": "",
   "license": "ISC",

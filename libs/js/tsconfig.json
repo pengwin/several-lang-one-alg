@@ -2,6 +2,6 @@
   "compilerOptions": {
     "skipLibCheck": true  
   },
-  "include": ["src"],
-  "files": ["./index-cli.ts"]
+  "include": ["./src/**/*.ts"],
+  "files": ["./src/index-cli.ts"]
 }

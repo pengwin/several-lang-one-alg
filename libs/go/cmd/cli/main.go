@@ -4,6 +4,11 @@ import (
 	sums "gitlab.com/ikruchkov0/codewars_katas/go/square-sums-simple/pkg"
 )
 
+func sortingFactory(path *sums.Path, maxN int) sums.NodesSorting {
+	//return sums.NewNodesSortingCustom(path, maxN)
+	return sums.NewNodesSortingNative(path, maxN)
+}
+
 func main() {
 
 	metrics := sums.NewMetrics(false)
@@ -11,7 +16,7 @@ func main() {
 	return*/
 
 	for n := 0; n <= 2000; n++ {
-		a := sums.SquareSumsRow(n, metrics)
+		a := sums.SquareSumsRow(n, metrics, sortingFactory)
 		if a == nil {
 			// no
 			//fmt.Printf("No")

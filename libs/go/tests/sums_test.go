@@ -9,6 +9,11 @@ import (
 	sums "gitlab.com/ikruchkov0/codewars_katas/go/square-sums-simple/pkg"
 )
 
+func sortingFactory(path *sums.Path, maxN int) sums.NodesSorting {
+	//return sums.NewNodesSortingCustom(path, maxN)
+	return sums.NewNodesSortingNative(path, maxN)
+}
+
 func verify(t require.TestingT, n int, a []int) {
 	if len(a) != n {
 		t.Errorf("Wrong length %d expected %d", len(a), n)
@@ -33,7 +38,6 @@ func verify(t require.TestingT, n int, a []int) {
 }
 
 func TestSums(t *testing.T) {
-	t.Skip()
 	valid := []int{
 		15,
 		23,
@@ -44,26 +48,30 @@ func TestSums(t *testing.T) {
 
 	for _, n := range valid {
 		t.Run(fmt.Sprintf("%d", n), func(t *testing.T) {
-			a := sums.SquareSumsRow(n, nil)
+			a := sums.SquareSumsRow(n, nil, sortingFactory)
 			verify(t, n, a)
 		})
 	}
 }
 
-func TestSumsAll(t *testing.T) {
-	for i := 2; i <= 2000; i++ {
-		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
-			a := sums.SquareSumsRow(i, nil)
-			verify(t, i, a)
+func BenchmarkSums(b *testing.B) {
+	for i := 100; i <= 500; i++ {
+		b.Run(fmt.Sprintf("%d", i), func(b *testing.B) {
+			a := sums.SquareSumsRow(i, nil, sortingFactory)
+			verify(b, i, a)
 		})
 	}
 }
 
-func BenchmarkSums(b *testing.B) {
-	for i := 2; i <= 1000; i++ {
-		b.Run(fmt.Sprintf("%d", i), func(b *testing.B) {
-			a := sums.SquareSumsRow(i, nil)
-			verify(b, i, a)
-		})
+func BenchmarkSimpleCycle(b *testing.B) {
+	for i := 1900; i <= 2000; i++ {
+		a := sums.SquareSumsRow(i, nil, sortingFactory)
+		verify(b, i, a)
 	}
+}
+
+func BenchmarkSimpleOneShot(b *testing.B) {
+	n := 102
+	a := sums.SquareSumsRow(n, nil, sortingFactory)
+	verify(b, n, a)
 }

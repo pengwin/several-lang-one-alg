@@ -18,6 +18,9 @@ func NewMetrics(printProgress bool) *Metrics {
 
 func (rcvr *Metrics) IncrementDfsCounter() {
 	rcvr.dfsCounter += 1
+	if rcvr.dfsCounter > 117081 {
+		panic(fmt.Sprintf("Too many DFS calls %d", rcvr.dfsCounter))
+	}
 }
 
 func (rcvr *Metrics) FinalizeDfsCounter(n int) {

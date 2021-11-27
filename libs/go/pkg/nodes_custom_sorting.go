@@ -1,14 +1,16 @@
 package sums
 
+//import "sort"
+
 type SortBucketList struct {
 	path *Path
 	list []*Node
 }
 
-func newSortBucketList(path *Path) *SortBucketList {
+func newSortBucketList(path *Path, capacity int) *SortBucketList {
 	return &SortBucketList{
 		path: path,
-		list: make([]*Node, 0),
+		list: make([]*Node, 0, capacity),
 	}
 }
 
@@ -46,19 +48,42 @@ func (rcvr *SortBucketList) AddNode(node *Node) {
 	}
 }
 
-type NodesSorting struct {
+type NodesSortingCustom struct {
 	path *Path
 	maxN int
 }
 
-func NewNodesSorting(path *Path, maxN int) *NodesSorting {
-	return &NodesSorting{
+func NewNodesSortingCustom(path *Path, maxN int) *NodesSortingCustom {
+	return &NodesSortingCustom{
 		path: path,
 		maxN: maxN,
 	}
 }
 
-func (rcvr *NodesSorting) SortNodes(nodes []*Node) []*Node {
+func (rcvr *NodesSortingCustom) SortNodes(nodes []*Node) {
+
+	/*sortFunc := func(i int, j int) bool {
+
+		nodeA := (*nodes)[i]
+		nodeB := (*nodes)[j]
+
+		var condition bool
+		if rcvr.path != nil {
+			a := nodeA.PairsCount()
+			b := nodeB.PairsCount()
+			if a != b {
+				condition = a < b
+			} else {
+				condition = nodeA.Value() > nodeB.Value()
+			}
+		} else {
+			condition = nodeA.Value() > nodeB.Value()
+		}
+		return condition
+	}
+
+	sort.Slice(*nodes, sortFunc)*/
+
 	sortList := make([]*SortBucketList, rcvr.maxN+1)
 
 	for _, node := range nodes {
@@ -71,15 +96,13 @@ func (rcvr *NodesSorting) SortNodes(nodes []*Node) []*Node {
 
 		list := sortList[pairsCount]
 		if list == nil {
-			list = newSortBucketList(rcvr.path)
+			list = newSortBucketList(rcvr.path, rcvr.maxN/2)
 		}
 
 		list.AddNode(node)
 
 		sortList[pairsCount] = list
 	}
-
-	result := make([]*Node, len(nodes))
 
 	index := 0
 	for _, list := range sortList {
@@ -88,9 +111,8 @@ func (rcvr *NodesSorting) SortNodes(nodes []*Node) []*Node {
 		}
 
 		for _, n := range list.Nodes() {
-			result[index] = n
+			nodes[index] = n
 			index++
 		}
 	}
-	return result
 }

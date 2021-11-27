@@ -37,7 +37,7 @@ namespace SquareSums
             headNode.Add(tailNode);
         }
         
-        public void SortPairsUsing(NodesSorting sorting)
+        public void SortPairsUsing(INodesSorting sorting)
         {
             for (var i = 0; i < _nodes.Length; i++)
             {

@@ -30,9 +30,22 @@ namespace Tests
         [InlineData(25)]
         [InlineData(26)]
         [InlineData(2000)]
-        public void TestSums(int n)
+        public void TestSums_WithCustomSorting(int n)
         {
-            var actual = Calculator.SquareSumsRow(n, null);
+            var actual = Calculator.SquareSumsRow(n, null, NodesSorting.CreateCustomSorting);
+            
+            Verify(actual, n);
+        }
+        
+        [Theory]
+        [InlineData(15)]
+        [InlineData(23)]
+        [InlineData(25)]
+        [InlineData(26)]
+        [InlineData(2000)]
+        public void TestSums_WithNativeSorting(int n)
+        {
+            var actual = Calculator.SquareSumsRow(n, null, NodesSorting.CreateNativeSorting);
             
             Verify(actual, n);
         }

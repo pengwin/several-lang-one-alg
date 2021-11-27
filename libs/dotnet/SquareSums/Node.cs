@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SquareSums
 {
-    internal class Node
+    public class Node
     {
         /// <summary>
         /// Used while constructing tree
@@ -26,7 +26,7 @@ namespace SquareSums
         public Span<Node> Pairs => _pairs;
 
         
-        public void SortPairsUsing(NodesSorting sorting)
+        public void SortPairsUsing(INodesSorting sorting)
         {
             sorting.SortNodes(_pairs);
         }
@@ -42,5 +42,25 @@ namespace SquareSums
         }
 
         public int PairsCount => _pairs.Length;
+        
+        public int PairsNotInPath(Path? path)
+        {
+            if (path == null)
+            {
+                return PairsCount;
+            }
+
+            var count = 0;
+            for (var i = 0; i < Pairs.Length; i++)
+            {
+                var nn = Pairs[i];
+                if (!path.Contains(nn.Value))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
     };
 }

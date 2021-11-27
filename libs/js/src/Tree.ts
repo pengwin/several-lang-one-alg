@@ -38,9 +38,9 @@ export class Tree {
   
     sortPairsWithSorting(sorting: NodesSorting) {
       for (let n of this.nodes) {
-        n.pairs = sorting.sortNodes(n.pairs);
+        sorting.sortNodes(n.pairs);
       }
   
-      this.nodes = sorting.sortNodes(this.nodes);
+      sorting.sortNodes(this.nodes);
     }
   }

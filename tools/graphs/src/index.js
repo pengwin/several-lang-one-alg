@@ -68,7 +68,7 @@ function tableHint(metricsMap) {
     return result;
 }
 
-function main() {
+function main(metricsPath) {
 
     const metricsMap = {
         'elapsedTime': {
@@ -103,8 +103,6 @@ function main() {
         }
     };
 
-    const metricsPath = '../../metrics';
-
     const binariesMap = {
         'C++': {
             file: 'cpp.txt'
@@ -127,7 +125,9 @@ function main() {
     console.log(tableHint(metricsMap));
 }
 
-main();
+const metrics_path = process.argv[2];
+
+main(metrics_path);
 
 
 

@@ -1,3 +1,5 @@
+import { Path } from './Path';
+
 export class Node {
     public value: number;
     public pairs: Array<Node>;
@@ -15,10 +17,14 @@ export class Node {
       this.pairs.push(node);
     }
   
-    static compareNodes(a: Node, b: Node) {
-      if (a.pairsCount() < b.pairsCount()) {
-        return -1;
+    pairsNotInPath(path: Path): number {
+      let count = 0;
+      for (let n of this.pairs) {
+          if (path.contains(n.value)) {
+              continue;
+          }
+          count++;
       }
-      return 1;
-    }
+      return count;
+  }
   }
