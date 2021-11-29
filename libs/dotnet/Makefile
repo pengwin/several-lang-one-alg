@@ -8,10 +8,9 @@ all: build
 
 build:
 	mkdir -p $(OUT_DIR_BIN)
-	dotnet publish -c Release -r linux-x64 --self-contained false -o $(OUTPUT_BIN)
+	dotnet publish -c Release -r linux-x64 --self-contained false -o $(OUTPUT_BIN) ./SquareSumsCli/SquareSumsCli.csproj
 
 wasm:
 	mkdir -p $(OUT_DIR_WASM)
-	em++ -O3 main_wasm.cpp -s WASM=1 -o $(OUTPUT_WASM)
-
+	dotnet publish -c Release -o $(OUTPUT_WASM) ./SquareSumsWasm/SquareSumsWasm.csproj
 

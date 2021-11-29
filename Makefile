@@ -1,4 +1,4 @@
-.PHONY: all build wasm go-bin cpp-bin dotnet-bin js-bin
+.PHONY: all build wasm go-bin cpp-bin dotnet-bin js-bin go-wasm cpp-wasm dotnet-wasm
 all: build
 
 SHELL = /bin/bash
@@ -7,15 +7,33 @@ TIME=/usr/bin/time --verbose # use gnu-time, not bash builtin time
 METRICS_DIR=./metrics
 
 build: go-bin cpp-bin dotnet-bin js-bin
+
+wasm: go-wasm cpp-wasm dotnet-wasm
+
+wasm-copy: #wasm
+	cp -rv ./wasm/dotnet/wwwroot/_framework ./tools/wasm-host/public
+	cp -v ./wasm/cpp-wasm.js ./tools/wasm-host/public/cpp-wasm.js
+	cp -v ./wasm/cpp-wasm.wasm ./tools/wasm-host/public/cpp-wasm.wasm
+	cp -v ./wasm/go-main.wasm ./tools/wasm-host/public/go-main.wasm
+	cp -v ./wasm/go-wasm_exec.js ./tools/wasm-host/public/go-wasm_exec.js 
 	
 go-bin:
 	make -C libs/go build
 
+go-wasm:
+	make -C libs/go wasm
+
 cpp-bin:
 	make -C libs/cpp build
 
+cpp-wasm:
+	make -C libs/cpp wasm
+
 dotnet-bin:
 	make -C libs/dotnet build
+
+dotnet-wasm:
+	make -C libs/dotnet wasm
 
 js-bin:
 	make -C libs/js build

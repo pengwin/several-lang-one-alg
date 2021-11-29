@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SquareSums", "SquareSums\Sq
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{1DDD3900-6264-4BAD-A23E-7DEC152CF378}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SquareSumsWasm", "SquareSumsWasm\SquareSumsWasm.csproj", "{1C7C17CC-375D-4116-8899-8C3A43EFF5A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{1DDD3900-6264-4BAD-A23E-7DEC152CF378}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DDD3900-6264-4BAD-A23E-7DEC152CF378}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DDD3900-6264-4BAD-A23E-7DEC152CF378}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C7C17CC-375D-4116-8899-8C3A43EFF5A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C7C17CC-375D-4116-8899-8C3A43EFF5A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C7C17CC-375D-4116-8899-8C3A43EFF5A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C7C17CC-375D-4116-8899-8C3A43EFF5A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
