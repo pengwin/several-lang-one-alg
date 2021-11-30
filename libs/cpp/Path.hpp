@@ -16,7 +16,6 @@ private:
 
     std::vector<int> toVector(PathNode *node, std::vector<int> v)
     {
-        PathNode *prev = node->Prev();
         while (node != NULL)
         {
             v.push_back(node->Value());

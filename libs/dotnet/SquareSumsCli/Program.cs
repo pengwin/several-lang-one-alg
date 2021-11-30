@@ -3,7 +3,7 @@
 using SquareSums;
 
 var metrics = new Metrics(false);
-for (var n = 500; n <= 1000; n++)
+for (var n = 2; n <= 2000; n++)
 {
     Calculator.SquareSumsRow(n, metrics, NodesSorting.CreateNativeSorting);
 }

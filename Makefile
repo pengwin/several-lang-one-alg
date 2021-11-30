@@ -1,4 +1,4 @@
-.PHONY: all build wasm go-bin cpp-bin dotnet-bin js-bin go-wasm cpp-wasm dotnet-wasm
+.PHONY: all build wasm go-bin cpp-bin dotnet-bin js-bin rust-bin go-wasm cpp-wasm dotnet-wasm
 all: build
 
 SHELL = /bin/bash
@@ -38,6 +38,9 @@ dotnet-wasm:
 js-bin:
 	make -C libs/js build
 
+rust-bin:
+	make -C libs/rust build
+
 time-go-bin: go-bin
 	mkdir -p $(METRICS_DIR)
 	echo '' > $(METRICS_DIR)/go.txt
@@ -58,7 +61,12 @@ time-dotnet-bin: dotnet-bin
 	echo '' > ./metrics/dotnet.txt
 	$(TIME) ./bin/dotnet/SquareSumsCli 2>&1 | tee -a $(METRICS_DIR)/dotnet.txt
 
-time-bin: time-dotnet-bin time-go-bin time-js-bin time-cpp-bin
+time-rust-bin: rust-bin
+	mkdir -p $(METRICS_DIR)
+	echo '' > ./metrics/rust.txt
+	$(TIME) ./bin/rust 2>&1 | tee -a $(METRICS_DIR)/rust.txt
+
+time-bin: time-dotnet-bin time-go-bin time-js-bin time-cpp-bin time-rust-bin
 
 md-table: time-bin
 	node ./tools/graphs/src/index.js $(METRICS_DIR) > ./bin/results.md

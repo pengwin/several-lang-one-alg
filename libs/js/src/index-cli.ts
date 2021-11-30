@@ -7,7 +7,7 @@ function main() {
   let metrics = new Metrics(false);
   //return squareSumsRow(886);
   
-  for (let n = 500; n <= 1000; n++) {
+  for (let n = 2; n <= 2000; n++) {
     let res = squareSumsRow(n, metrics, NodesSortingFactories.CreateNative);
   }
   metrics.printMetrics();
