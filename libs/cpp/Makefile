@@ -15,7 +15,8 @@ build:
 wasm:
 	mkdir -p $(OUT_DIR_WASM)
 	#em++ -O3 main_wasm.cpp -std=c++20 -s WASM=1 -fsanitize=address -s ALLOW_MEMORY_GROWTH -s ASSERTIONS=2 -o $(OUTPUT_WASM)
-	em++ -O3 main_wasm.cpp -std=c++20 -s WASM=1 -s ALLOW_MEMORY_GROWTH -o $(OUTPUT_WASM)
+	#em++ -O3 main_wasm.cpp -std=c++20 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -o $(OUTPUT_WASM)
+	em++ -g main_wasm.cpp -std=c++20 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -o $(OUTPUT_WASM)
 
 build-debug:
 	mkdir -p $(DEBUG_DIR)

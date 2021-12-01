@@ -3,5 +3,12 @@
 version = 3
 
 [[package]]
-name = "rust"
+name = "cli"
+version = "0.1.0"
+dependencies = [
+ "square-sums",
+]
+
+[[package]]
+name = "square-sums"
 version = "0.1.0"

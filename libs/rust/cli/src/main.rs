@@ -1,17 +1,11 @@
-use metrics::Metrics;
-
-mod metrics;
-mod node;
-mod nodes_sorting;
-mod path;
-mod square_sums;
-mod tree;
+use square_sums::Metrics;
+use square_sums::square_sums_row;
 
 fn main() {
     let mut metrics: Option<Metrics> = Some(Metrics::new(false));
     let mut count = 0;
     for n in 2..2001 {
-        match square_sums::square_sums_row(n, &mut metrics) {
+        match square_sums_row(n, &mut metrics) {
             Ok(res) => match res {
                 Some(_) => count+=1,
                 None => {},

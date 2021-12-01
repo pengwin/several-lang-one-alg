@@ -11,4 +11,4 @@ all: build
 build:
 	mkdir -p $(OUT_DIR_BIN)
 	RUSTFLAGS="-C target-cpu=native" cargo build --release
-	cp -v ./target/release/rust $(OUTPUT_BIN)
+	cp -v ./target/release/cli $(OUTPUT_BIN)
