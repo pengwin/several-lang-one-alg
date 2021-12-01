@@ -1,8 +1,12 @@
 use square_sums::Metrics;
 use square_sums::square_sums_row;
 
+fn print(s: String) {
+    println!("{}", s);
+}
+
 fn main() {
-    let mut metrics: Option<Metrics> = Some(Metrics::new(false));
+    let mut metrics = Some(Metrics::new(false, print));
     let mut count = 0;
     for n in 2..2001 {
         match square_sums_row(n, &mut metrics) {

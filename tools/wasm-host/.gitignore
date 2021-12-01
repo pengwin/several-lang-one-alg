@@ -25,3 +25,4 @@ yarn-error.log*
 /public/_framework
 /public/cpp-wasm*
 /public/go-*
+/public/rust-wasm

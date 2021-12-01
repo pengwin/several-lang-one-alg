@@ -1,4 +1,4 @@
-.PHONY: all build wasm go-bin cpp-bin dotnet-bin js-bin rust-bin go-wasm cpp-wasm dotnet-wasm
+.PHONY: all build wasm go-bin cpp-bin dotnet-bin js-bin rust-bin go-wasm cpp-wasm dotnet-wasm rust-wasm
 all: build
 
 SHELL = /bin/bash
@@ -8,14 +8,15 @@ METRICS_DIR=./metrics
 
 build: go-bin cpp-bin dotnet-bin js-bin
 
-wasm: go-wasm cpp-wasm dotnet-wasm
+wasm: go-wasm cpp-wasm dotnet-wasm rust-wasm
 
-wasm-copy: #wasm
+wasm-copy: wasm
 	cp -rv ./wasm/dotnet/wwwroot/_framework ./tools/wasm-host/public
 	cp -v ./wasm/cpp-wasm.js ./tools/wasm-host/public/cpp-wasm.js
 	cp -v ./wasm/cpp-wasm.wasm ./tools/wasm-host/public/cpp-wasm.wasm
 	cp -v ./wasm/go-main.wasm ./tools/wasm-host/public/go-main.wasm
 	cp -v ./wasm/go-wasm_exec.js ./tools/wasm-host/public/go-wasm_exec.js 
+	cp -rv ./wasm/rust-wasm ./tools/wasm-host/public
 	
 go-bin:
 	make -C libs/go build
@@ -40,6 +41,9 @@ js-bin:
 
 rust-bin:
 	make -C libs/rust build
+
+rust-wasm:
+	make -C libs/rust wasm
 
 time-go-bin: go-bin
 	mkdir -p $(METRICS_DIR)

@@ -1,0 +1,7 @@
+calc rust: calc rust: 27459.7080078125 ms (2-2000)
+rust size: 22.7kb, transferred 46.8 kb resources
+
+calc golang: 56932.837890625 ms (2-1999)
+golang size: 617kb transferred 2.1 Mb resource
+
+cpp size: 167kb transferred 562kb resources

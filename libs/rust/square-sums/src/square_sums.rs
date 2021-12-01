@@ -1,9 +1,11 @@
 use std::{ops::Deref, rc::Rc};
 
 use crate::{
+    metrics::Metrics,
     node::Node,
+    nodes_sorting::{NodesSorting, NodesSortingWithCache},
     path::Path,
-    tree::{Tree, TreeBuilder}, nodes_sorting::{NodesSorting, NodesSortingWithCache}, metrics::Metrics,
+    tree::{Tree, TreeBuilder},
 };
 
 fn is_fair_square(n: u32) -> bool {
@@ -11,7 +13,7 @@ fn is_fair_square(n: u32) -> bool {
     return sqrt_val - f64::floor(sqrt_val) == 0.0;
 }
 
-pub fn build_tree(n: u32 , sorting: &NodesSorting) -> Result<Option<Tree>, String> {
+pub fn build_tree(n: u32, sorting: &NodesSorting) -> Result<Option<Tree>, String> {
     let mut builder = TreeBuilder::new(n);
 
     for i in 1..n + 1 {
@@ -32,13 +34,16 @@ pub fn build_tree(n: u32 , sorting: &NodesSorting) -> Result<Option<Tree>, Strin
     builder.build(sorting)
 }
 
-fn dfs(
+fn dfs<P>(
     n: u32,
     node: Rc<Node>,
-    path: &mut Path, 
-    metrics: &mut Option<Metrics>, 
+    path: &mut Path,
+    metrics: &mut Option<Metrics<P>>,
     sorting: &mut NodesSortingWithCache,
-) -> Result<(), String> {
+) -> Result<(), String>
+where
+    P: Fn(String) -> (),
+{
     if let Some(m) = metrics.as_mut() {
         m.increment_dfs_counter();
     }
@@ -56,7 +61,7 @@ fn dfs(
         if path.contains(v) {
             continue;
         }
-        
+
         path.push(v)?;
 
         if path.count == n {
@@ -74,25 +79,31 @@ fn dfs(
     Ok(())
 }
 
-pub fn square_sums_row(n: u32, metrics: &mut Option<Metrics>) -> Result<Option<Vec<u32>>, String> {
-	let sorting = NodesSorting::new();
-	match build_tree(n , &sorting)? {
-    Some(tree) => {
-        for root in &tree.roots {
-		let mut path = Path::new(n);
-        let node = root.clone();
-		let mut sorting = NodesSortingWithCache::new(n);
-		path.push(node.value)?;
-		dfs(n, node, &mut path , metrics, &mut sorting)?;
-		if path.count == n {
-            if let Some(m) = metrics.as_mut() {
-                m.finalize_dfs_counter(n);
+pub fn square_sums_row<P>(
+    n: u32,
+    metrics: &mut Option<Metrics<P>>,
+) -> Result<Option<Vec<u32>>, String>
+where
+    P: Fn(String) -> (),
+{
+    let sorting = NodesSorting::new();
+    match build_tree(n, &sorting)? {
+        Some(tree) => {
+            for root in &tree.roots {
+                let mut path = Path::new(n);
+                let node = root.clone();
+                let mut sorting = NodesSortingWithCache::new(n);
+                path.push(node.value)?;
+                dfs(n, node, &mut path, metrics, &mut sorting)?;
+                if path.count == n {
+                    if let Some(m) = metrics.as_mut() {
+                        m.finalize_dfs_counter(n);
+                    }
+                    return Ok(Some(path.into()));
+                }
             }
-			return Ok(Some(path.into()));
-		}
-	}
-	return Ok(None);
-    },
-    None => Ok(None)
+            return Ok(None);
+        }
+        None => Ok(None),
     }
 }

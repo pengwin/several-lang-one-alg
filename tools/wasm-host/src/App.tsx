@@ -54,7 +54,7 @@ function createWasmMap() {
     runner: () => new Promise<void>((resolve, reject) => {
       /*const r = window.SquareSumsRow(649);
       console.log(r);*/
-      anyWindow().fullSquareSums(500, 1000);
+      anyWindow().fullSquareSums(2, 2000);
       resolve();
     })
   });
@@ -79,8 +79,33 @@ function createWasmMap() {
       document.body.appendChild(script);
     }),
     runner: () => new Promise<void>((resolve, reject) => {
-      anyWindow().Module._FullSquareSums(500, 1000);
+      anyWindow().Module._FullSquareSums(2, 2000);
       resolve();
+    })
+  });
+
+  map.set('rust', {
+    loader: () => new Promise<void>((resolve, reject) => {
+      const scriptId = 'rust_wasm';
+      if (document.getElementById(scriptId)) {
+        resolve();
+      }
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = "/rust-wasm-entry.js";
+      script.setAttribute('autostart', 'false');
+      script.type = 'module';
+      script.addEventListener('load', () => {
+        anyWindow().init_rust_wasm().then((m: unknown) => {
+          anyWindow().rust_square_sums = (m as any).square_sums;
+          resolve();
+        }).catch((e: unknown) => console.error(e));
+      });
+      document.body.appendChild(script);
+    }),
+    runner: () => new Promise<void>((resolve, reject) => {
+      const res = anyWindow().rust_square_sums(2,2000);
+      resolve(res);
     })
   });
 
@@ -101,7 +126,7 @@ function App() {
 
   const runWasm = (key: string) => {
     console.time(`calc ${key}`);
-    wasmMap.get(key)?.runner().then(() => console.timeEnd(`calc ${key}`));
+    wasmMap.get(key)?.runner().then(() => console.timeEnd(`calc ${key}`)).catch(() => console.timeEnd(`calc ${key}`));
   }
 
   const buttons = [];
