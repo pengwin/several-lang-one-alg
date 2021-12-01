@@ -105,7 +105,7 @@ impl NodesSorting {
     }
 
     pub fn sort_nodes(&self, nodes: &mut Vec<Rc<Node>>) {
-        nodes.sort_by(|i, j| nodes_comparer_simple(i, j).expect(""));
+        nodes.sort_unstable_by(|i, j| nodes_comparer_simple(i, j).expect(""));
     }
 }
 
@@ -122,6 +122,6 @@ impl NodesSortingWithCache {
 
     pub fn sort_nodes(&mut self, path: &Path, nodes: &mut RefMut<Vec<Weak<Node>>>) {
         self.cache.flush();
-        nodes.sort_by(|i, j| nodes_comparer_with_path(&mut self.cache, path, i, j).expect(""));
+        nodes.sort_unstable_by(|i, j| nodes_comparer_with_path(&mut self.cache, path, i, j).expect(""));
     }
 }

@@ -3,7 +3,8 @@
 members = [
     "cli",
     "square-sums",
-    "rust-wasm"
+    "rust-wasm",
+    "pprof-alg"
 ]
 
 [profile.release]

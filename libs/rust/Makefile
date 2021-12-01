@@ -13,3 +13,8 @@ build:
 
 wasm:
 	wasm-pack build --release --target web --out-dir $(OUTPUT_WASM) rust-wasm
+
+pprof-svg:
+	mkdir -p ./pprof
+	cargo run --bin pprof-alg -- ./pprof/profiling.pb
+	go tool pprof -web ./pprof/profiling.pb
