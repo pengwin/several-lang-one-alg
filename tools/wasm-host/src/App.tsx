@@ -2,6 +2,17 @@ import React, { useState } from 'react';
 
 const anyWindow = () => window as any;
 
+let cppApi = {
+  _FullSquareSums(from: number, to: number) {
+    
+  }
+};
+
+let jsApi = {
+  fullSquareSums(from: number, to: number) {
+  }
+}
+
 function createWasmMap() {
   const map = new Map<string, { loader: () => Promise<void>, runner: () => Promise<void> }>();
 
@@ -24,7 +35,7 @@ function createWasmMap() {
       document.body.appendChild(script);
     }),
     runner: () => new Promise<void>((resolve, reject) => {
-      anyWindow().DotNet.invokeMethodAsync('SquareSumsWasm', 'FullSquareSums', 500, 1000)
+      anyWindow().DotNet.invokeMethodAsync('SquareSumsWasm', 'FullSquareSums', 2, 2000)
         .then((data: any) => {
           console.log(data);
           resolve();
@@ -52,8 +63,6 @@ function createWasmMap() {
       document.body.appendChild(script);
     }),
     runner: () => new Promise<void>((resolve, reject) => {
-      /*const r = window.SquareSumsRow(649);
-      console.log(r);*/
       anyWindow().fullSquareSums(2, 2000);
       resolve();
     })
@@ -65,21 +74,24 @@ function createWasmMap() {
       if (document.getElementById(scriptId)) {
         resolve();
       }
-
-      anyWindow().Module = {
-        onRuntimeInitialized: function () {
-          resolve();
-        }
-      };
-
       const script = document.createElement('script');
       script.id = scriptId;
-      script.src = "/cpp-wasm.js";
-      script.async = false;
+      script.src = "/cpp-wasm-entry.js";
+      script.type = 'module';
+      script.addEventListener('load', () => {
+        const instance = anyWindow().cppWasmModule({
+          onRuntimeInitialized() {
+            instance.then((api: unknown) => {
+              cppApi = api as any;
+              resolve();
+            });
+          }
+        });
+      });
       document.body.appendChild(script);
     }),
     runner: () => new Promise<void>((resolve, reject) => {
-      anyWindow().Module._FullSquareSums(2, 2000);
+      cppApi._FullSquareSums(2,2000);
       resolve();
     })
   });
@@ -93,7 +105,6 @@ function createWasmMap() {
       const script = document.createElement('script');
       script.id = scriptId;
       script.src = "/rust-wasm-entry.js";
-      script.setAttribute('autostart', 'false');
       script.type = 'module';
       script.addEventListener('load', () => {
         anyWindow().init_rust_wasm().then((m: unknown) => {
@@ -106,6 +117,20 @@ function createWasmMap() {
     runner: () => new Promise<void>((resolve, reject) => {
       const res = anyWindow().rust_square_sums(2,2000);
       resolve(res);
+    })
+  });
+
+  map.set('js', {
+    loader: () => new Promise<void>(async (resolve, reject) => {
+      const { fullSquareSums } = await import('square-sums/dist/index-web');
+      jsApi = {
+        fullSquareSums
+      };
+      resolve();
+    }),
+    runner: () => new Promise<void>((resolve, reject) => {
+      jsApi.fullSquareSums(2, 2000);
+      resolve();
     })
   });
 

@@ -1,7 +1,7 @@
 OUT_DIR_BIN=../../bin
 OUTPUT_BIN=$(OUT_DIR_BIN)/cpp
 OUT_DIR_WASM=../../wasm
-OUTPUT_WASM=$(OUT_DIR_WASM)/cpp-wasm.html
+OUTPUT_WASM=$(OUT_DIR_WASM)/cpp-wasm.js
 DEBUG_DIR=./bin/debug
 DEBUG_BIN=$(DEBUG_DIR)/cpp
 
@@ -12,9 +12,25 @@ build:
 	mkdir -p $(OUT_DIR_BIN)
 	g++ -O3 -march=native main.cpp -o $(OUTPUT_BIN)
 
+# -s MALLOC=emmalloc \
+#-s ALLOW_MEMORY_GROWTH \
+#-s STRICT=1 \
+# -fsanitize=address 
+# --no-entry \
+#-g3 -gsource-map -s SAFE_HEAP=1 -s SAFE_HEAP_LOG=1 --source-map-base 
+# -s INITIAL_MEMORY=512MB \
+
 wasm:
 	mkdir -p $(OUT_DIR_WASM)
-	em++ -O3 main_wasm.cpp -std=c++20 -s WASM=1 -fsanitize=address -s ALLOW_MEMORY_GROWTH -s ASSERTIONS=2 -o $(OUTPUT_WASM)
+	emcc -O3 \
+	--bind \
+	-s ALLOW_MEMORY_GROWTH=1 \
+    -s MODULARIZE=1 \
+    -s EXPORT_ES6=1 \
+	-std=c++20 \
+	-o $(OUTPUT_WASM) main_wasm.cpp
+	
+	
 
 build-debug:
 	mkdir -p $(DEBUG_DIR)

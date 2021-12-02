@@ -168,7 +168,10 @@ public:
 
     ~PairsNotInPathCache()
     {
-        delete _cache;
+        if (_cache != NULL)
+        {
+            delete _cache;
+        }
     }
 
     void Flush()
@@ -246,6 +249,10 @@ public:
         {
             _usePath = true;
             _cache = new PairsNotInPathCache(path, maxN);
+        }
+        else
+        {
+            _cache = NULL;
         }
     }
 

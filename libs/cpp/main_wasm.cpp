@@ -3,11 +3,8 @@
 #include "SquareSums.hpp"
 #include "Metrics.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-EMSCRIPTEN_KEEPALIVE int FullSquareSums(int from, int to) {
+int _FullSquareSums(int from, int to) {
+    std::cout << "FullSquareSums\n";
     int count = 0;
     Metrics* metrics = new Metrics(false);
     for (int n = from ; n <= to ; n++) {
@@ -15,11 +12,18 @@ EMSCRIPTEN_KEEPALIVE int FullSquareSums(int from, int to) {
         if (res.size() > 0) {
             count++;
         }
-        //std::cout << n << ": " << res.size() << "\n";
     }
     metrics->PrintMetrics();
     delete metrics;
     return count;
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+EMSCRIPTEN_KEEPALIVE int FullSquareSums(int from, int to) {
+    return _FullSquareSums(from, to);
 }
 
 #ifdef __cplusplus
