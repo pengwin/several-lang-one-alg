@@ -9,7 +9,7 @@ func IsFairSquare(n int) bool {
 	return sqrt-math.Floor(sqrt) == 0
 }
 
-func buildTree(n int, sorting NodesSorting) *Tree {
+func buildTree(n int, sorting NodesSortingFacade) *Tree {
 	tree := NewTree(n)
 
 	for i := 1; i <= n; i++ {
@@ -35,7 +35,7 @@ func buildTree(n int, sorting NodesSorting) *Tree {
 	return tree
 }
 
-func dfs(n int, node *Node, path *Path, metrics *Metrics, sorting NodesSorting) {
+func dfs(n int, node *Node, path *Path, metrics *Metrics, sorting NodesSortingFacade) {
 
 	if metrics != nil {
 		metrics.IncrementDfsCounter()

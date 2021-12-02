@@ -4,9 +4,9 @@ import (
 	sums "gitlab.com/ikruchkov0/codewars_katas/go/square-sums-simple/pkg"
 )
 
-func sortingFactory(path *sums.Path, maxN int) sums.NodesSorting {
+func sortingFactory(path *sums.Path, maxN int) sums.NodesSortingFacade {
 	//return sums.NewNodesSortingCustom(path, maxN)
-	return sums.NewNodesSortingNative(path, maxN)
+	return *sums.NewNodesSortingFacade(path, maxN)
 }
 
 func main() {

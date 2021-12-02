@@ -19,7 +19,7 @@ wasm:
 
 pprof-svg:
 	GOGC=off go test -bench=BenchmarkSimpleOneShot -cpuprofile cpu.out ./tests
-	go tool pprof -svg tests.test cpu.out > cpu.svg
+	go tool pprof -web tests.test cpu.out > cpu.svg
 
 pprof:
 	GOGC=off go test -bench=BenchmarkSimpleOneShot -cpuprofile cpu.out ./tests

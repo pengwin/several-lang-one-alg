@@ -25,7 +25,7 @@ func (n *Node) Pairs() []*Node {
 	return n.pairs
 }
 
-func (n *Node) SortPairsWithSorting(sorting NodesSorting) {
+func (n *Node) SortPairsWithSorting(sorting NodesSortingFacade) {
 	sorting.SortNodes(n.Pairs())
 }
 
@@ -107,7 +107,7 @@ func (t *Tree) VerifyAllNodesHavePairs() bool {
 	return true
 }
 
-func (t *Tree) SortPairsWithSorting(sorting NodesSorting) {
+func (t *Tree) SortPairsWithSorting(sorting NodesSortingFacade) {
 	for _, n := range t.nodes {
 		n.SortPairsWithSorting(sorting)
 	}

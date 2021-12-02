@@ -9,9 +9,8 @@ import (
 	sums "gitlab.com/ikruchkov0/codewars_katas/go/square-sums-simple/pkg"
 )
 
-func sortingFactory(path *sums.Path, maxN int) sums.NodesSorting {
-	//return sums.NewNodesSortingCustom(path, maxN)
-	return sums.NewNodesSortingNative(path, maxN)
+func sortingFactory(path *sums.Path, maxN int) sums.NodesSortingFacade {
+	return *sums.NewNodesSortingFacade(path, maxN)
 }
 
 func verify(t require.TestingT, n int, a []int) {
