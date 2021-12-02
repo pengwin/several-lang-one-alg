@@ -11,10 +11,12 @@ build: go-bin cpp-bin dotnet-bin js-bin
 wasm: go-wasm cpp-wasm dotnet-wasm rust-wasm
 
 wasm-copy: #wasm
-	cp -rv ./wasm/dotnet/wwwroot/_framework ./tools/wasm-host/public
+	mkdir -p ./tools/wasm-host/public/dotnet-aot/
+	mkdir -p ./tools/wasm-host/public/dotnet-no-aot/
+	cp -rv ./wasm/dotnet/wwwroot/dotnet-aot/_framework ./tools/wasm-host/public/dotnet-aot/_framework
+	cp -rv ./wasm/dotnet/wwwroot/dotnet-no-aot/_framework ./tools/wasm-host/public/dotnet-no-aot/_framework
 	cp -v ./wasm/cpp-wasm.js ./tools/wasm-host/public/cpp-wasm.js
 	cp -v ./wasm/cpp-wasm.wasm ./tools/wasm-host/public/cpp-wasm.wasm
-	cp -v ./wasm/cpp-wasm.wasm.map ./tools/wasm-host/public/cpp-wasm.wasm.map
 	cp -v ./wasm/go-main.wasm ./tools/wasm-host/public/go-main.wasm
 	cp -v ./wasm/go-wasm_exec.js ./tools/wasm-host/public/go-wasm_exec.js 
 	cp -rv ./wasm/rust-wasm ./tools/wasm-host/public

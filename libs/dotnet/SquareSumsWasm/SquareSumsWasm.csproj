@@ -4,7 +4,16 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(AOT)'=='True'">
         <RunAOTCompilation>true</RunAOTCompilation>
+        <StaticWebAssetBasePath>/dotnet-aot/</StaticWebAssetBasePath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(AOT)'=='False'">
+        <RunAOTCompilation>false</RunAOTCompilation>
+        <StaticWebAssetBasePath>/dotnet-no-aot/</StaticWebAssetBasePath>
     </PropertyGroup>
 
     <ItemGroup>

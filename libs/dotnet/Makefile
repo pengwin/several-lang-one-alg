@@ -12,5 +12,6 @@ build:
 
 wasm:
 	mkdir -p $(OUT_DIR_WASM)
-	dotnet publish -c Release -o $(OUTPUT_WASM) ./SquareSumsWasm/SquareSumsWasm.csproj
+	dotnet publish -c Release -property:AOT=True -o $(OUTPUT_WASM) ./SquareSumsWasm/SquareSumsWasm.csproj
+	dotnet publish -c Release -property:AOT=False -o $(OUTPUT_WASM) ./SquareSumsWasm/SquareSumsWasm.csproj
 
