@@ -1,27 +1,25 @@
-use std::{rc::Rc};
+use std::rc::Rc;
 
-use crate::{node::Node, nodes_sorting_trait::NodesSorting};
+use crate::{node::Node, nodes_sorting_facade::NodesSortingFacade};
 
 pub struct Tree {
-    pub roots: Vec<Rc<Node>>
+    pub roots: Vec<Rc<Node>>,
 }
 
 impl Tree {
     pub fn new(roots: Vec<Rc<Node>>) -> Tree {
-        Tree{roots}
+        Tree { roots }
     }
 }
 
 pub struct TreeBuilder {
-    nodes: Vec<Option<Rc<Node>>>
+    nodes: Vec<Option<Rc<Node>>>,
 }
 
 impl TreeBuilder {
-
     pub fn new(n: u32) -> TreeBuilder {
-        TreeBuilder{
-            nodes: vec![None; (n+1)
-             as usize]
+        TreeBuilder {
+            nodes: vec![None; (n + 1) as usize],
         }
     }
 
@@ -31,7 +29,7 @@ impl TreeBuilder {
         head_node.add(Rc::downgrade(&tail_node));
     }
 
-    pub fn build<S: NodesSorting>(&mut self, sorting: &S) -> Result<Option<Tree>, String> {
+    pub fn build(&mut self, sorting: &NodesSortingFacade) -> Result<Option<Tree>, String> {
         let size = self.nodes.len();
         let mut nodes = Vec::with_capacity(size);
 
@@ -42,14 +40,13 @@ impl TreeBuilder {
                 Some(existing_node) => {
                     existing_node.finalize()?;
                     nodes.push(existing_node.clone())
-                },
+                }
                 None => return Ok(None),
             }
-
         }
 
         sorting.sort_nodes(&mut nodes);
-        
+
         Ok(Some(Tree::new(nodes)))
     }
 
@@ -61,7 +58,7 @@ impl TreeBuilder {
                 let node = Rc::new(Node::new(n));
                 self.nodes[index] = Some(node.clone());
                 node
-            },
+            }
         }
     }
 }

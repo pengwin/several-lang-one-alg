@@ -1,9 +1,4 @@
-use std::{
-    cell::RefMut,
-    rc::{Rc, Weak},
-};
-
-use crate::nodes_sorting_trait::{NodesSorting, NodesSortingWithCache};
+use std::rc::Weak;
 
 use crate::{
     node::Node,
@@ -14,12 +9,12 @@ use crate::{
 
 pub struct NativeNodesSorting {}
 
-impl NodesSorting for NativeNodesSorting {
-    fn new() -> NativeNodesSorting {
+impl NativeNodesSorting {
+    pub fn new() -> NativeNodesSorting {
         NativeNodesSorting {}
     }
 
-    fn sort_nodes(&self, nodes: &mut Vec<Rc<Node>>) {
+    pub fn sort_nodes(&self, nodes: &mut [Rc<Node>]) {
         nodes.sort_unstable_by(|i, j| nodes_comparer(i, j).expect(""));
     }
 }
@@ -28,14 +23,14 @@ pub struct NativeNodesSortingWithCache {
     cache: PairsNotInPathCache,
 }
 
-impl NodesSortingWithCache for NativeNodesSortingWithCache {
-    fn new(n: u32) -> NativeNodesSortingWithCache {
+impl NativeNodesSortingWithCache {
+    pub fn new(n: u32) -> NativeNodesSortingWithCache {
         NativeNodesSortingWithCache {
             cache: PairsNotInPathCache::new(n),
         }
     }
 
-    fn sort_nodes(&mut self, path: &Path, nodes: &mut RefMut<Vec<Weak<Node>>>) {
+    pub fn sort_nodes(&mut self, path: &Path, nodes: &mut [Weak<Node>]) {
         self.cache.flush();
         nodes.sort_unstable_by(|i, j| {
             nodes_comparer_with_path(&mut self.cache, path, i, j).expect("")

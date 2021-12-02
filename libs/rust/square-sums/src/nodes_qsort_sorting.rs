@@ -1,9 +1,7 @@
 use std::{
-    cell::RefMut,
+    cmp::Ordering,
     rc::{Rc, Weak},
 };
-
-use crate::nodes_sorting_trait::{NodesSorting, NodesSortingWithCache};
 
 use crate::{
     node::Node,
@@ -12,33 +10,74 @@ use crate::{
     path::Path,
 };
 
-pub struct NativeNodesSorting {}
-
-impl NodesSorting for NativeNodesSorting {
-    fn new() -> NativeNodesSorting {
-        NativeNodesSorting {}
+fn partition<N, C: FnMut(&N, &N) -> Ordering>(
+    comparer: &mut C,
+    nodes: &mut [N],
+    start: usize,
+    end: usize,
+) -> usize {
+    let mut marker = start;
+    for i in start..end {
+        let compare_result = comparer(&nodes[i], &nodes[end]);
+        if compare_result == Ordering::Less {
+            nodes.swap(i, marker);
+            marker += 1;
+        }
     }
 
-    fn sort_nodes(&self, nodes: &mut Vec<Rc<Node>>) {
-        nodes.sort_unstable_by(|i, j| nodes_comparer(i, j).expect(""));
+    nodes.swap(marker, end);
+    marker
+}
+
+fn quicksort<N, C: FnMut(&N, &N) -> Ordering>(mut comparer: C, nodes: &mut [N]) {
+    quicksort_recursive(&mut comparer, nodes, 0, nodes.len() - 1)
+}
+
+fn quicksort_recursive<N, C: FnMut(&N, &N) -> Ordering>(
+    comparer: &mut C,
+    nodes: &mut [N],
+    start: usize,
+    end: usize,
+) {
+    if start >= end {
+        return;
+    }
+
+    let pivot = partition(comparer, nodes, start, end);
+    if pivot > 0 {
+        quicksort_recursive(comparer, nodes, start, pivot - 1);
+    }
+    quicksort_recursive(comparer, nodes, pivot + 1, end);
+}
+
+pub struct QSortNodesSorting {}
+
+impl QSortNodesSorting {
+    pub fn new() -> QSortNodesSorting {
+        QSortNodesSorting {}
+    }
+
+    pub fn sort_nodes(&self, nodes: &mut [Rc<Node>]) {
+        quicksort(|i, j| nodes_comparer(i, j).expect(""), nodes);
     }
 }
 
-pub struct NativeNodesSortingWithCache {
+pub struct QSortNodesSortingWithCache {
     cache: PairsNotInPathCache,
 }
 
-impl NodesSortingWithCache for NativeNodesSortingWithCache {
-    fn new(n: u32) -> NativeNodesSortingWithCache {
-        NativeNodesSortingWithCache {
+impl QSortNodesSortingWithCache {
+    pub fn new(n: u32) -> QSortNodesSortingWithCache {
+        QSortNodesSortingWithCache {
             cache: PairsNotInPathCache::new(n),
         }
     }
 
-    fn sort_nodes(&mut self, path: &Path, nodes: &mut RefMut<Vec<Weak<Node>>>) {
+    pub fn sort_nodes(&mut self, path: &Path, nodes: &mut [Weak<Node>]) {
         self.cache.flush();
-        nodes.sort_unstable_by(|i, j| {
-            nodes_comparer_with_path(&mut self.cache, path, i, j).expect("")
-        });
+        quicksort(
+            |i, j| nodes_comparer_with_path(&mut self.cache, path, i, j).expect(""),
+            nodes,
+        );
     }
 }

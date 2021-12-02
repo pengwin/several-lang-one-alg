@@ -47,7 +47,7 @@ fn main() {
 fn work() {
     let mut metrics = Some(Metrics::new(false, print));
     let n = 102;
-    match square_sums_row::<_, square_sums::NativeNodesSorting, square_sums::NativeNodesSortingWithCache>(n, &mut metrics) {
+    match square_sums_row(n, &mut metrics) {
         Ok(res) => match res {
             Some(_) => {},
             None => {},
