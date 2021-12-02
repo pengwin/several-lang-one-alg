@@ -58,7 +58,7 @@ namespace SquareSums
         }
     }
     
-    internal class CustomNodesSorting: INodesSorting
+    public class CustomNodesSorting: INodesSorting
     {
         private readonly Path? _path;
         private readonly int _maxN;

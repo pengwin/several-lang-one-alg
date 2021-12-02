@@ -26,11 +26,6 @@ namespace SquareSums
         public Span<Node> Pairs => _pairs;
 
         
-        public void SortPairsUsing(INodesSorting sorting)
-        {
-            sorting.SortNodes(_pairs);
-        }
-
         public void Add(Node node)
         {
             _buildTimePairs.Add(node);

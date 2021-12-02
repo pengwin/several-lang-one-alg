@@ -1,9 +1,22 @@
+using System;
+
 namespace SquareSums
 {
-    public static class NodesSorting
+    /// <summary>
+    /// NodesSorting facade
+    /// </summary>
+    public class NodesSorting<T> where T: INodesSorting
     {
-        public static INodesSorting CreateCustomSorting(Path? path, int maxN) => new CustomNodesSorting(path, maxN);
+        private readonly T _sorting;
+
+        public NodesSorting(T sorting)
+        {
+            _sorting = sorting;
+        }
         
-        public static INodesSorting CreateNativeSorting(Path? path, int maxN) => new NativeNodesSorting(path, maxN);
+        public void SortNodes(Span<Node> nodes)
+        {
+            _sorting.SortNodes(nodes);
+        }
     }
 }

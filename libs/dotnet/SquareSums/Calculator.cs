@@ -4,9 +4,9 @@ using System.Runtime.CompilerServices;
 
 namespace SquareSums
 {
-    public static class Calculator
+    public static class Calculator<T> where T: INodesSorting
     {
-        public delegate INodesSorting NodesSortingFactory(Path? path, int maxN);
+        public delegate NodesSorting<T> NodesSortingFactory(Path? path, int maxN);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFairSquare(int n)
@@ -15,9 +15,9 @@ namespace SquareSums
             return sqrtVal - Math.Floor(sqrtVal) == 0;
         }
 
-        private static Tree? BuildTree(int n, INodesSorting sorting)
+        private static Tree<T>? BuildTree(int n, NodesSorting<T> sorting)
         {
-            Tree tree = new Tree(n);
+            var tree = new Tree<T>(n);
 
             for (int i = 1; i <= n; i++)
             {
@@ -47,10 +47,9 @@ namespace SquareSums
             return tree;
         }
 
-        private static void Dfs(int n, Node node, Path path, Metrics? metrics, INodesSorting nodesSorting)
+        private static void Dfs(int n, Node node, Path path, Metrics? metrics, NodesSorting<T> sorting)
         {
             metrics?.IncrementDfsCounter();
-            var sorting = new CustomNodesSorting(path, n);
             sorting.SortNodes(node.Pairs);
 
             for (var i = 0; i < node.Pairs.Length; i++)
@@ -70,7 +69,7 @@ namespace SquareSums
                     break;
                 }
 
-                Dfs(n, p, path, metrics, nodesSorting);
+                Dfs(n, p, path, metrics, sorting);
                 if (path.Count == n)
                 {
                     break;

@@ -80,7 +80,7 @@ namespace SquareSums
         }
     }
 
-    internal class NativeNodesSorting: INodesSorting
+    public class NativeNodesSorting: INodesSorting
     {
         private readonly NodesComparer _comparer;
 

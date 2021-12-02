@@ -20,7 +20,7 @@ namespace Tests
 
                 unique.Add(x);
                 var sum = x + a[i + 1];
-                Calculator.IsFairSquare(sum).Should().BeTrue($"Wrong square number {sum}");
+                Calculator<NativeNodesSorting>.IsFairSquare(sum).Should().BeTrue($"Wrong square number {sum}");
             }
         }
 
@@ -32,7 +32,7 @@ namespace Tests
         [InlineData(2000)]
         public void TestSums_WithCustomSorting(int n)
         {
-            var actual = Calculator.SquareSumsRow(n, null, NodesSorting.CreateCustomSorting);
+            var actual = Calculator<CustomNodesSorting>.SquareSumsRow(n, null, NodesSortingFactory.CreateCustomSorting);
             
             Verify(actual, n);
         }
@@ -45,7 +45,7 @@ namespace Tests
         [InlineData(2000)]
         public void TestSums_WithNativeSorting(int n)
         {
-            var actual = Calculator.SquareSumsRow(n, null, NodesSorting.CreateNativeSorting);
+            var actual = Calculator<NativeNodesSorting>.SquareSumsRow(n, null, NodesSortingFactory.CreateNativeSorting);
             
             Verify(actual, n);
         }
