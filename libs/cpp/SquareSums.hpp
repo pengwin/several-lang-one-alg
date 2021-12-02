@@ -17,9 +17,9 @@ bool is_fair_square(int n)
 	return sqrtVal - floor(sqrtVal) == 0;
 }
 
-Tree *build_tree(int n, NodesSorting *sorting)
+template<class T> Tree<T> *build_tree(int n, NodesSorting<T> *sorting)
 {
-	Tree *tree = new Tree(n);
+	Tree<T> *tree = new Tree<T>(n);
 
 	for (int i = 1; i <= n; i++)
 	{
@@ -51,7 +51,7 @@ Tree *build_tree(int n, NodesSorting *sorting)
 	return tree;
 }
 
-void dfs(int n, Node *node, Path *path, Metrics *metrics, NodesSorting *sorting)
+template<class T> void dfs(int n, Node *node, Path *path, Metrics *metrics, NodesSorting<T> *sorting)
 {
 	if (metrics != NULL) {
 		metrics->IncrementDfsCounter();
@@ -85,10 +85,10 @@ void dfs(int n, Node *node, Path *path, Metrics *metrics, NodesSorting *sorting)
 	}
 }
 
-std::vector<int> square_sums_row(int n, Metrics *metrics)
+template<class T> std::vector<int> square_sums_row(int n, Metrics *metrics)
 {
-	NodesSorting * sorting = new NodesSorting(NULL, n);
-	Tree *tree = build_tree(n, sorting);
+	NodesSorting<T> * sorting = new NodesSorting<T>(NULL, n);
+	Tree<T> *tree = build_tree<T>(n, sorting);
 	delete sorting;
 	if (tree == NULL)
 	{
@@ -98,7 +98,7 @@ std::vector<int> square_sums_row(int n, Metrics *metrics)
 	for (Node *root : *tree->Roots())
 	{
 		Path *path = new Path(n);
-		NodesSorting * sorting = new NodesSorting(path, n);
+		NodesSorting<T> * sorting = new NodesSorting<T>(path, n);
 		path->Push(root->Value());
 		dfs(n, root, path, metrics, sorting);
 		if (path->Count() == n)

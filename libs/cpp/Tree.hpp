@@ -4,6 +4,7 @@
 #include "Node.hpp"
 #include "NodesSorting.hpp"
 
+template<class T>
 class Tree
 {
 private:
@@ -65,7 +66,7 @@ public:
         return true;
     }
 
-    void SortPairsWithSorting(NodesSorting *sorting)
+    void SortPairsWithSorting(NodesSorting<T> *sorting)
     {
         for (Node *n : *nodes)
         {

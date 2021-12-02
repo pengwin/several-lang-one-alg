@@ -2,13 +2,15 @@
 
 #include "SquareSums.hpp"
 #include "Metrics.hpp"
+#include "NativeNodesSorting.hpp"
+
 
 int _FullSquareSums(int from, int to) {
     std::cout << "FullSquareSums\n";
     int count = 0;
     Metrics* metrics = new Metrics(false);
     for (int n = from ; n <= to ; n++) {
-        std::vector<int> res = square_sums_row(n, metrics);
+        std::vector<int> res = square_sums_row<NativeNodesSorting>(n, metrics);
         if (res.size() > 0) {
             count++;
         }
