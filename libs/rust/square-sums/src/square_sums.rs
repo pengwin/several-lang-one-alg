@@ -3,7 +3,7 @@ use std::{ops::Deref, rc::Rc};
 use crate::{
     metrics::Metrics,
     node::Node,
-    nodes_sorting::{NodesSorting, NodesSortingWithCache},
+    nodes_sorting_trait::{NodesSorting, NodesSortingWithCache},
     path::Path,
     tree::{Tree, TreeBuilder},
 };
@@ -13,7 +13,7 @@ fn is_fair_square(n: u32) -> bool {
     return sqrt_val - f64::floor(sqrt_val) == 0.0;
 }
 
-pub fn build_tree(n: u32, sorting: &NodesSorting) -> Result<Option<Tree>, String> {
+pub fn build_tree<S: NodesSorting>(n: u32, sorting: &S) -> Result<Option<Tree>, String> {
     let mut builder = TreeBuilder::new(n);
 
     for i in 1..n + 1 {
@@ -34,15 +34,16 @@ pub fn build_tree(n: u32, sorting: &NodesSorting) -> Result<Option<Tree>, String
     builder.build(sorting)
 }
 
-fn dfs<P>(
+fn dfs<P, S>(
     n: u32,
     node: Rc<Node>,
     path: &mut Path,
     metrics: &mut Option<Metrics<P>>,
-    sorting: &mut NodesSortingWithCache,
+    sorting: &mut S,
 ) -> Result<(), String>
 where
     P: Fn(String) -> (),
+    S: NodesSortingWithCache
 {
     if let Some(m) = metrics.as_mut() {
         m.increment_dfs_counter();
@@ -79,20 +80,22 @@ where
     Ok(())
 }
 
-pub fn square_sums_row<P>(
+pub fn square_sums_row<P, S, SC>(
     n: u32,
     metrics: &mut Option<Metrics<P>>,
 ) -> Result<Option<Vec<u32>>, String>
 where
     P: Fn(String) -> (),
+    S: NodesSorting,
+    SC: NodesSortingWithCache
 {
-    let sorting = NodesSorting::new();
+    let sorting = S::new();
     match build_tree(n, &sorting)? {
         Some(tree) => {
             for root in &tree.roots {
                 let mut path = Path::new(n);
                 let node = root.clone();
-                let mut sorting = NodesSortingWithCache::new(n);
+                let mut sorting = SC::new(n);
                 path.push(node.value)?;
                 dfs(n, node, &mut path, metrics, &mut sorting)?;
                 if path.count == n {

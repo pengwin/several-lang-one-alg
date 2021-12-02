@@ -1,12 +1,12 @@
 package sums
 
 type NodesSortingFacade struct {
-	sorting *NodesSortingNative
+	sorting *NodesSortingQSort
 }
 
 func NewNodesSortingFacade(path *Path, maxN int) *NodesSortingFacade {
 	return &NodesSortingFacade{
-		sorting: NewNodesSortingNative(path, maxN),
+		sorting: NewNodesSortingQSort(path, maxN),
 	}
 }
 

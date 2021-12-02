@@ -1,6 +1,6 @@
 use std::{rc::Rc};
 
-use crate::{node::Node, nodes_sorting::NodesSorting};
+use crate::{node::Node, nodes_sorting_trait::NodesSorting};
 
 pub struct Tree {
     pub roots: Vec<Rc<Node>>
@@ -31,7 +31,7 @@ impl TreeBuilder {
         head_node.add(Rc::downgrade(&tail_node));
     }
 
-    pub fn build(&mut self, sorting: &NodesSorting) -> Result<Option<Tree>, String> {
+    pub fn build<S: NodesSorting>(&mut self, sorting: &S) -> Result<Option<Tree>, String> {
         let size = self.nodes.len();
         let mut nodes = Vec::with_capacity(size);
 

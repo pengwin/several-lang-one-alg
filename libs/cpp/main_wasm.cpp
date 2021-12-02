@@ -3,6 +3,7 @@
 #include "SquareSums.hpp"
 #include "Metrics.hpp"
 #include "NativeNodesSorting.hpp"
+#include "QSortNodesSorting.hpp"
 
 
 int _FullSquareSums(int from, int to) {
@@ -10,7 +11,7 @@ int _FullSquareSums(int from, int to) {
     int count = 0;
     Metrics* metrics = new Metrics(false);
     for (int n = from ; n <= to ; n++) {
-        std::vector<int> res = square_sums_row<NativeNodesSorting>(n, metrics);
+        std::vector<int> res = square_sums_row<QSortNodesSorting>(n, metrics);
         if (res.size() > 0) {
             count++;
         }
