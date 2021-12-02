@@ -4,9 +4,23 @@ import { Path } from './Path';
 import { NodesSorting, NodesSortingFactory } from './NodesSorting';
 import { Metrics } from './Metrics';
 
-function isFairSquare(n: number) {
+/*function isFairSquare(n: number) {
     let sqrtVal = Math.sqrt(n);
     return sqrtVal - Math.floor(sqrtVal) == 0;
+}*/
+
+function isFairSquare(n: number): boolean {
+	const h = n & 0xF // h is the last hex "digit"
+	if (h > 9) {
+		return false
+	}
+
+	// Use lazy evaluation to jump out of the if statement as soon as possible
+	if (h != 2 && h != 3 && h != 5 && h != 6 && h != 7 && h != 8) {
+		const t = Math.floor(Math.sqrt(n))
+		return t*t == n
+	}
+	return false
 }
 
 function buildTree(n: number, sorting: NodesSorting) {

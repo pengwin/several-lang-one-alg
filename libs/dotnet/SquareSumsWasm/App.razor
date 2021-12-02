@@ -7,7 +7,7 @@
         var metrics = new Metrics(false);
         for (var n = from; n <= to; n++)
         {
-            Calculator<QSortNodesSorting>.SquareSumsRow(n, metrics, NodesSortingFactory.CreateQSortSorting);
+            Calculator.SquareSumsRow(n, metrics);
         }
         metrics.PrintMetrics();
         return Task.FromResult(0);

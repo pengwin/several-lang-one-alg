@@ -9,8 +9,17 @@ use crate::{
 };
 
 fn is_fair_square(n: u32) -> bool {
-    let sqrt_val = f64::sqrt(n as f64);
-    return sqrt_val - f64::floor(sqrt_val) == 0.0;
+    let h = n & 0xF; // h is the last hex "digit"
+    if h > 9 {
+        return false;
+    }
+
+    // Use lazy evaluation to jump out of the if statement as soon as possible
+    if h != 2 && h != 3 && h != 5 && h != 6 && h != 7 && h != 8 {
+        let t = f64::floor(f64::sqrt(n as f64)) as u32;
+        return t * t == n;
+    }
+    return false;
 }
 
 pub fn build_tree(n: u32, sorting: &NodesSortingFacade) -> Result<Option<Tree>, String> {
@@ -42,7 +51,7 @@ fn dfs<P>(
     sorting: &mut NodesSortingWithCacheFacade,
 ) -> Result<(), String>
 where
-    P: Fn(String) -> ()
+    P: Fn(String) -> (),
 {
     if let Some(m) = metrics.as_mut() {
         m.increment_dfs_counter();
@@ -84,7 +93,7 @@ pub fn square_sums_row<P>(
     metrics: &mut Option<Metrics<P>>,
 ) -> Result<Option<Vec<u32>>, String>
 where
-    P: Fn(String) -> ()
+    P: Fn(String) -> (),
 {
     let sorting = NodesSortingFacade::new();
     match build_tree(n, &sorting)? {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SquareSums
 {
-    internal class Tree<T> where T: INodesSorting
+    internal class Tree
     {
         private Node?[] _nodes;
 
@@ -37,7 +37,7 @@ namespace SquareSums
             headNode.Add(tailNode);
         }
         
-        public void SortPairsUsing(NodesSorting<T> sorting)
+        public void SortPairsUsing(NodesSortingFacade sorting)
         {
             for (var i = 0; i < _nodes.Length; i++)
             {

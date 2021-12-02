@@ -68,13 +68,29 @@ namespace SquareSums
         private int GetPairsNotInPath(Node node)
         {
             var result = _cache[node.Value];
-            if (result == -1)
+            if (result != -1)
             {
-                result = node.PairsNotInPath(_path);
-                _cache[node.Value] = result;
+                return result;
+            }
+            
+            result = PairsNotInPath(node, _path!);
+            _cache[node.Value] = result;
+            return result;
+        }
+        
+        private static int PairsNotInPath(Node node, Path path)
+        {
+            var count = 0;
+            var values = node.Values;
+            for (var i = 0; i < values.Length; i++)
+            {
+                if (!path.Contains(values[i]))
+                {
+                    count++;
+                }
             }
 
-            return result;
+            return count;
         }
     }
 }

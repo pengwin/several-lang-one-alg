@@ -5,7 +5,7 @@ using SquareSums;
 var metrics = new Metrics(false);
 for (var n = 2; n <= 2000; n++)
 {
-    Calculator<QSortNodesSorting>.SquareSumsRow(n, metrics, NodesSortingFactory.CreateQSortSorting);
+    Calculator.SquareSumsRow(n, metrics);
 }
 
 metrics.PrintMetrics();

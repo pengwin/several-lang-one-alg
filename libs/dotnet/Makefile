@@ -15,3 +15,9 @@ wasm:
 	dotnet publish -c Release -property:AOT=True -o $(OUTPUT_WASM) ./SquareSumsWasm/SquareSumsWasm.csproj
 	dotnet publish -c Release -property:AOT=False -o $(OUTPUT_WASM) ./SquareSumsWasm/SquareSumsWasm.csproj
 
+#view on https://www.speedscope.app/
+profile:
+	dotnet build
+	mkdir -p ./profiler
+	dotnet-trace collect --format speedscope --output ./profiler/speedscope.trace -- ./SquareSumsCli/bin/Debug/net6.0/SquareSumsCli
+	speedscope ./profiler/speedscope.speedscope.json

@@ -13,8 +13,16 @@
 
 bool is_fair_square(int n)
 {
-	double sqrtVal = sqrt((double)n);
-	return sqrtVal - floor(sqrtVal) == 0;
+    int h = n & 0xF;  // h is the last hex "digit"
+    if (h > 9)
+        return false;
+    // Use lazy evaluation to jump out of the if statement as soon as possible
+    if (h != 2 && h != 3 && h != 5 && h != 6 && h != 7 && h != 8)
+    {
+        int t = (int) floor( sqrt((double) n));
+        return t*t == n;
+    }
+    return false;
 }
 
 template<class T> Tree<T> *build_tree(int n, NodesSorting<T> *sorting)

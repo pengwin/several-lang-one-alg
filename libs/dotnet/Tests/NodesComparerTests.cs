@@ -1,5 +1,4 @@
 using FluentAssertions;
-using FluentAssertions.Equivalency;
 using SquareSums;
 using Xunit;
 using Node = SquareSums.Node;

@@ -20,21 +20,8 @@ namespace Tests
 
                 unique.Add(x);
                 var sum = x + a[i + 1];
-                Calculator<NativeNodesSorting>.IsFairSquare(sum).Should().BeTrue($"Wrong square number {sum}");
+                Calculator.IsFairSquare(sum).Should().BeTrue($"Wrong square number {sum}");
             }
-        }
-
-        [Theory]
-        [InlineData(15)]
-        [InlineData(23)]
-        [InlineData(25)]
-        [InlineData(26)]
-        [InlineData(2000)]
-        public void TestSums_WithCustomSorting(int n)
-        {
-            var actual = Calculator<CustomNodesSorting>.SquareSumsRow(n, null, NodesSortingFactory.CreateCustomSorting);
-            
-            Verify(actual, n);
         }
         
         [Theory]
@@ -43,9 +30,18 @@ namespace Tests
         [InlineData(25)]
         [InlineData(26)]
         [InlineData(2000)]
-        public void TestSums_WithNativeSorting(int n)
+        public void TestSums(int n)
         {
-            var actual = Calculator<NativeNodesSorting>.SquareSumsRow(n, null, NodesSortingFactory.CreateNativeSorting);
+            var actual = Calculator.SquareSumsRow(n, null);
+            
+            Verify(actual, n);
+        }
+        
+        [Fact]
+        public void TestSums_LongestSearch()
+        {
+            var n = 102;
+            var actual = Calculator.SquareSumsRow(n, null);
             
             Verify(actual, n);
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace SquareSums
 {
@@ -20,6 +21,7 @@ namespace SquareSums
             }
         }
 
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Contains(int n)
         {
             return _attached[n];
