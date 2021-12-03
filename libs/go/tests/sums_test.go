@@ -69,6 +69,12 @@ func BenchmarkSimpleCycle(b *testing.B) {
 	}
 }
 
+func BenchmarkFull(b *testing.B) {
+	for i := 2; i <= 2000; i++ {
+		sums.SquareSumsRow(i, nil, sortingFactory)
+	}
+}
+
 func BenchmarkSimpleOneShot(b *testing.B) {
 	n := 102
 	a := sums.SquareSumsRow(n, nil, sortingFactory)

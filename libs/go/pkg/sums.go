@@ -4,9 +4,23 @@ import (
 	"math"
 )
 
-func IsFairSquare(n int) bool {
+/*func IsFairSquare(n int) bool {
 	sqrt := math.Sqrt(float64(n))
 	return sqrt-math.Floor(sqrt) == 0
+}*/
+
+func IsFairSquare(n int) bool {
+	h := n & 0xF // h is the last hex "digit"
+	if h > 9 {
+		return false
+	}
+
+	// Use lazy evaluation to jump out of the if statement as soon as possible
+	if h != 2 && h != 3 && h != 5 && h != 6 && h != 7 && h != 8 {
+		t := int(math.Floor(math.Sqrt((float64(n)))))
+		return t*t == n
+	}
+	return false
 }
 
 func buildTree(n int, sorting NodesSortingFacade) *Tree {

@@ -3,17 +3,26 @@ use std::{ops::Deref, rc::Rc};
 use crate::{
     metrics::Metrics,
     node::Node,
-    nodes_sorting::{NodesSorting, NodesSortingWithCache},
+    nodes_sorting_facade::{NodesSortingFacade, NodesSortingWithCacheFacade},
     path::Path,
     tree::{Tree, TreeBuilder},
 };
 
 fn is_fair_square(n: u32) -> bool {
-    let sqrt_val = f64::sqrt(n as f64);
-    return sqrt_val - f64::floor(sqrt_val) == 0.0;
+    let h = n & 0xF; // h is the last hex "digit"
+    if h > 9 {
+        return false;
+    }
+
+    // Use lazy evaluation to jump out of the if statement as soon as possible
+    if h != 2 && h != 3 && h != 5 && h != 6 && h != 7 && h != 8 {
+        let t = f64::floor(f64::sqrt(n as f64)) as u32;
+        return t * t == n;
+    }
+    return false;
 }
 
-pub fn build_tree(n: u32, sorting: &NodesSorting) -> Result<Option<Tree>, String> {
+pub fn build_tree(n: u32, sorting: &NodesSortingFacade) -> Result<Option<Tree>, String> {
     let mut builder = TreeBuilder::new(n);
 
     for i in 1..n + 1 {
@@ -39,7 +48,7 @@ fn dfs<P>(
     node: Rc<Node>,
     path: &mut Path,
     metrics: &mut Option<Metrics<P>>,
-    sorting: &mut NodesSortingWithCache,
+    sorting: &mut NodesSortingWithCacheFacade,
 ) -> Result<(), String>
 where
     P: Fn(String) -> (),
@@ -86,13 +95,13 @@ pub fn square_sums_row<P>(
 where
     P: Fn(String) -> (),
 {
-    let sorting = NodesSorting::new();
+    let sorting = NodesSortingFacade::new();
     match build_tree(n, &sorting)? {
         Some(tree) => {
             for root in &tree.roots {
                 let mut path = Path::new(n);
                 let node = root.clone();
-                let mut sorting = NodesSortingWithCache::new(n);
+                let mut sorting = NodesSortingWithCacheFacade::new(n);
                 path.push(node.value)?;
                 dfs(n, node, &mut path, metrics, &mut sorting)?;
                 if path.count == n {

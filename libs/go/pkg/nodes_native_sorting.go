@@ -6,13 +6,19 @@ type nodesSortingWrapper struct {
 	pairsNotInPathCache []int
 	path                *Path
 	nodes               []*Node
+	maxCachePosition    int
 }
 
 func newNodesSortingWrapper(path *Path, maxN int) *nodesSortingWrapper {
+	cache := make([]int, maxN+1)
+	for i := range cache {
+		cache[i] = -1
+	}
 	return &nodesSortingWrapper{
 		path:                path,
-		pairsNotInPathCache: make([]int, maxN+1),
+		pairsNotInPathCache: cache,
 		nodes:               []*Node{},
+		maxCachePosition:    0,
 	}
 }
 
@@ -20,6 +26,16 @@ func (rcvr *nodesSortingWrapper) flushPairsNotInPathCache() {
 	if rcvr.path == nil {
 		return
 	}
+
+	if rcvr.maxCachePosition == 0 {
+		return
+	}
+
+	rcvr.clearCache()
+	rcvr.maxCachePosition = 0
+}
+
+func (rcvr *nodesSortingWrapper) clearCache() {
 	for i, _ := range rcvr.pairsNotInPathCache {
 		rcvr.pairsNotInPathCache[i] = -1
 	}
@@ -35,6 +51,9 @@ func (rcvr *nodesSortingWrapper) getPairsNotInPath(node *Node) int {
 	if result == -1 {
 		result = node.PairsNotInPathCount(rcvr.path)
 		rcvr.pairsNotInPathCache[node.value] = result
+		if node.value > rcvr.maxCachePosition {
+			rcvr.maxCachePosition = node.value
+		}
 	}
 	return result
 }

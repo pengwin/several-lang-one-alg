@@ -2,6 +2,7 @@ import { Path } from './Path';
 import { Node } from './Node';
 import { CustomNodesSorting } from './CustomNodesSorting';
 import { NativeNodesSorting } from './NativeNodesSorting';
+import { QSortNodesSorting } from './QSortNodesSorting';
 
 export interface NodesSorting {
     sortNodes(nodes: Array<Node>);
@@ -16,5 +17,9 @@ export class NodesSortingFactories {
 
     static CreateNative(path: Path | null, maxN: number): NodesSorting {
         return new NativeNodesSorting(path, maxN);
+    }
+
+    static CreateQSort(path: Path | null, maxN: number): NodesSorting {
+        return new QSortNodesSorting(path, maxN);
     }
 }

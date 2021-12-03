@@ -4,20 +4,26 @@ using System.Runtime.CompilerServices;
 
 namespace SquareSums
 {
-    public static class Calculator<T> where T: INodesSorting
+    public static class Calculator
     {
-        public delegate NodesSorting<T> NodesSortingFactory(Path? path, int maxN);
-        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFairSquare(int n)
         {
-            double sqrtVal = Math.Sqrt(n);
-            return sqrtVal - Math.Floor(sqrtVal) == 0;
+            int h = n & 0xF;  // h is the last hex "digit"
+            if (h > 9)
+                return false;
+            // Use lazy evaluation to jump out of the if statement as soon as possible
+            if (h != 2 && h != 3 && h != 5 && h != 6 && h != 7 && h != 8)
+            {
+                int t = (int) Math.Floor( Math.Sqrt(n));
+                return t*t == n;
+            }
+            return false;
         }
 
-        private static Tree<T>? BuildTree(int n, NodesSorting<T> sorting)
+        private static Tree? BuildTree(int n, NodesSortingFacade sorting)
         {
-            var tree = new Tree<T>(n);
+            var tree = new Tree(n);
 
             for (int i = 1; i <= n; i++)
             {
@@ -47,7 +53,7 @@ namespace SquareSums
             return tree;
         }
 
-        private static void Dfs(int n, Node node, Path path, Metrics? metrics, NodesSorting<T> sorting)
+        private static void Dfs(int n, Node node, Path path, Metrics? metrics, NodesSortingFacade sorting)
         {
             metrics?.IncrementDfsCounter();
             sorting.SortNodes(node.Pairs);
@@ -79,9 +85,9 @@ namespace SquareSums
             }
         }
 
-        public static IReadOnlyList<int> SquareSumsRow(int n, Metrics? metrics, NodesSortingFactory sortingFactory)
+        public static Span<int> SquareSumsRow(int n, Metrics? metrics)
         {
-            var sortingForTree = sortingFactory(null, n);
+            var sortingForTree = new NodesSortingFacade(null, n);
             var tree = BuildTree(n, sortingForTree);
             if (tree == null)
             {
@@ -93,7 +99,7 @@ namespace SquareSums
             {
                 var root = list[i];
                 var path = new Path(n);
-                var sorting = sortingFactory(path, n);
+                var sorting = new NodesSortingFacade(path, n);
                 if (root == null)
                 {
                     throw new NullReferenceException("Unexpected null");
@@ -103,7 +109,7 @@ namespace SquareSums
                 Dfs(n, root, path, metrics, sorting);
                 if (path.Count == n)
                 {
-                    IReadOnlyList<int> result = path.ToVector();
+                    var result = path.AsSpan();
                     metrics?.FinalizeDfsCounter(n);
                     return result;
                 }

@@ -3,7 +3,7 @@ OUTPUT_BIN=$(OUT_DIR_BIN)/rust
 OUT_DIR_WASM=../../../wasm
 OUTPUT_WASM=$(OUT_DIR_WASM)/rust-wasm
 
-.PHONY: all build wasm 
+.PHONY: all build wasm pprof pprof-svg
 all: build
 
 build:
@@ -18,3 +18,8 @@ pprof-svg:
 	mkdir -p ./pprof
 	cargo run --bin pprof-alg -- ./pprof/profiling.pb
 	go tool pprof -web ./pprof/profiling.pb
+
+pprof:
+	mkdir -p ./pprof
+	cargo run --bin pprof-alg -- ./pprof/profiling.pb
+	go tool pprof ./pprof/profiling.pb

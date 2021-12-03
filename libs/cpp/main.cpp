@@ -3,6 +3,7 @@
 #include "SquareSums.hpp"
 #include "Metrics.hpp"
 #include "NativeNodesSorting.hpp"
+#include "QSortNodesSorting.hpp"
 
 int main() {
     Metrics* metrics = new Metrics(false);

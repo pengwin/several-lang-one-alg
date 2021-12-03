@@ -24,3 +24,11 @@ pprof-svg:
 pprof:
 	GOGC=off go test -bench=BenchmarkSimpleOneShot -cpuprofile cpu.out ./tests
 	go tool pprof tests.test cpu.out
+
+pprof-full-svg:
+	go test -bench=BenchmarkFull -cpuprofile cpu.out ./tests
+	go tool pprof -web tests.test cpu.out > cpu.svg
+
+	
+
+	
