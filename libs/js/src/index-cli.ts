@@ -8,7 +8,7 @@ function main() {
   //return squareSumsRow(886);
   
   for (let n = 2; n <= 2000; n++) {
-    let res = squareSumsRow(n, metrics, NodesSortingFactories.CreateQSort);
+    let res = squareSumsRow(n, metrics, NodesSortingFactories.CreateNative);
   }
   metrics.printMetrics();
 }

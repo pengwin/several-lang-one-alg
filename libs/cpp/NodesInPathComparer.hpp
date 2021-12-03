@@ -15,12 +15,15 @@ class PairsNotInPathCache
 private:
     Path *_path;
     std::vector<int> *_cache;
+    int _maxCachePosition;
 
 public:
     PairsNotInPathCache(Path *p, int maxN)
     {
         _path = p;
         _cache = new std::vector<int>(maxN + 1);
+        _cache->assign(maxN+1, -1);
+        _maxCachePosition = 0;
     }
 
     ~PairsNotInPathCache()
@@ -37,8 +40,15 @@ public:
         {
             return;
         }
+        
+        if (_maxCachePosition == 0)
+        {
+            return;
+        }
+
         int size = _cache->size();
         _cache->assign(size, -1);
+        _maxCachePosition = 0;
     }
 
     int GetPairsNotInPath(Node *node)
@@ -49,6 +59,9 @@ public:
         {
             result = node->PairsNotInPath(_path);
             (*_cache)[index] = result;
+            if (index > _maxCachePosition) {
+                _maxCachePosition = index;
+            }
         }
         return result;
     }

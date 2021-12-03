@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
 // ReSharper disable ForCanBeConvertedToForeach
 
 namespace SquareSums
@@ -11,23 +13,18 @@ namespace SquareSums
         /// </summary>
         private readonly List<Node> _buildTimePairs;
         private Node[] _pairs;
-        private int[] _values;
-
-
+        
         public Node(int val)
         {
             Value = val;
             _buildTimePairs = new List<Node>(val);
             _pairs = Array.Empty<Node>();
-            _values = Array.Empty<int>();
         }
 
 
         public int Value { get; }
-
-        public Span<int> Values => _values;
         
-        public Span<Node> Pairs => _pairs;
+        public Span<Node> Pairs => _pairs.AsSpan();
 
         
         public void Add(Node node)
@@ -37,12 +34,9 @@ namespace SquareSums
 
         public void FinalizePairs()
         {
-            _pairs = _buildTimePairs.ToArray();
-            _values = new int[_pairs.Length];
-            for (int i = 0; i < _pairs.Length; i++)
-            {
-                _values[i] = _pairs[i].Value;
-            }
+            var sourceSpan = CollectionsMarshal.AsSpan(_buildTimePairs);
+            _pairs = new Node[sourceSpan.Length];
+            sourceSpan.CopyTo(_pairs.AsSpan());
         }
 
         public int PairsCount => _pairs.Length;

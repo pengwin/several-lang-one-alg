@@ -17,41 +17,36 @@ namespace SquareSums
         {
             _comparer.FlushCache();
 
-            Quicksort(_comparer, ref nodes, 0, nodes.Length - 1);
+            Quicksort(_comparer, nodes, 0, nodes.Length - 1);
         }
 
-        private static int Partition(NodesComparer comparer, ref Span<Node> nodes, int start, int end)
+        private static int Partition(NodesComparer comparer, Span<Node> nodes, int start, int end)
         {
-            Node temp;
             int marker = start;
             for (int i = start; i < end; i++)
             {
                 var compareResult = comparer.Compare(nodes[i], nodes[end]);
                 if (compareResult == -1)
                 {
-                    temp = nodes[marker]; 
-                    nodes[marker] = nodes[i];
-                    nodes[i] = temp;
+                    (nodes[marker], nodes[i]) = (nodes[i], nodes[marker]);
                     marker += 1;
                 }
             }
             
-            temp = nodes[marker];
-            nodes[marker] = nodes[end];
-            nodes[end] = temp; 
+            (nodes[marker], nodes[end]) = (nodes[end], nodes[marker]);
             return marker;
         }
 
-        static void Quicksort(NodesComparer comparer, ref Span<Node> nodes, int start, int end)
+        static void Quicksort(NodesComparer comparer, Span<Node> nodes, int start, int end)
         {
             if (start >= end)
             {
                 return;
             }
 
-            int pivot = Partition(comparer, ref nodes, start, end);
-            Quicksort(comparer, ref nodes, start, pivot - 1);
-            Quicksort(comparer, ref nodes, pivot + 1, end);
+            int pivot = Partition(comparer, nodes, start, end);
+            Quicksort(comparer, nodes, start, pivot - 1);
+            Quicksort(comparer, nodes, pivot + 1, end);
         }
     }
 }

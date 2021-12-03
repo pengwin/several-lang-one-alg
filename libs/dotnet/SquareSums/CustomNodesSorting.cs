@@ -110,10 +110,10 @@ namespace SquareSums
         private static int PairsNotInPath(Node node, Path path)
         {
             var count = 0;
-            var values = node.Values;
-            for (var i = 0; i < values.Length; i++)
+            var pairs = node.Pairs;
+            for (var i = 0; i < pairs.Length; i++)
             {
-                if (!path.Contains(values[i]))
+                if (!path.Contains(pairs[i].Value))
                 {
                     count++;
                 }

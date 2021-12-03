@@ -17,19 +17,25 @@ fn pairs_not_in_path(node: &Rc<Node>, path: &Path) -> Result<u32, String> {
 
 pub struct PairsNotInPathCache {
     cache: Vec<Option<u32>>,
+    max_cache_position: usize,
 }
 
 impl PairsNotInPathCache {
     pub fn new(n: u32) -> PairsNotInPathCache {
         PairsNotInPathCache {
             cache: vec![None; (n + 1) as usize],
+            max_cache_position: 0,
         }
     }
 
     pub fn flush(&mut self) {
+        if self.max_cache_position == 0 {
+            return;
+        }
         for i in 0..self.cache.len() {
             self.cache[i] = None
         }
+        self.max_cache_position = 0;
     }
 
     pub fn get_pairs_not_in_path(&mut self, path: &Path, node: &Rc<Node>) -> Result<u32, String> {
@@ -41,6 +47,9 @@ impl PairsNotInPathCache {
 
         let pairs = pairs_not_in_path(node, path)?;
         self.cache[index] = Some(pairs);
+        if index > self.max_cache_position {
+            self.max_cache_position = index;
+        }
 
         return Ok(pairs);
     }

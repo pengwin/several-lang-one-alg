@@ -7,6 +7,7 @@ namespace SquareSums
     {
         private Path? _path;
         private readonly int[] _cache;
+        private int _maxCachePosition = 0;
 
         public NodesComparer(Path? path, int maxN)
         {
@@ -14,6 +15,7 @@ namespace SquareSums
             if (_path != null)
             {
                 _cache = new int[maxN+1];
+                ClearCache(maxN);
             }
             else
             {
@@ -59,10 +61,23 @@ namespace SquareSums
         
         public void FlushCache()
         {
-            for (var index = 0; index < _cache.Length; index++)
+            if (_cache.Length == 0)
             {
-                _cache[index] = -1;
+                return;
             }
+
+            if (_maxCachePosition == 0)
+            {
+                return;
+            }
+            
+            ClearCache(_maxCachePosition);
+            _maxCachePosition = 0;
+        }
+
+        private void ClearCache(int toIndex)
+        {
+            Array.Fill(_cache, -1, 0, toIndex+1);
         }
 
         private int GetPairsNotInPath(Node node)
@@ -75,16 +90,17 @@ namespace SquareSums
             
             result = PairsNotInPath(node, _path!);
             _cache[node.Value] = result;
+            _maxCachePosition = Math.Max(node.Value, _maxCachePosition);
             return result;
         }
         
         private static int PairsNotInPath(Node node, Path path)
         {
             var count = 0;
-            var values = node.Values;
-            for (var i = 0; i < values.Length; i++)
+            var pairs = node.Pairs;
+            for (var i = 0; i < pairs.Length; i++)
             {
-                if (!path.Contains(values[i]))
+                if (!path.Contains(pairs[i].Value))
                 {
                     count++;
                 }

@@ -85,7 +85,7 @@ namespace SquareSums
             }
         }
 
-        public static IReadOnlyList<int> SquareSumsRow(int n, Metrics? metrics)
+        public static Span<int> SquareSumsRow(int n, Metrics? metrics)
         {
             var sortingForTree = new NodesSortingFacade(null, n);
             var tree = BuildTree(n, sortingForTree);
@@ -109,7 +109,7 @@ namespace SquareSums
                 Dfs(n, root, path, metrics, sorting);
                 if (path.Count == n)
                 {
-                    IReadOnlyList<int> result = path.ToVector();
+                    var result = path.AsSpan();
                     metrics?.FinalizeDfsCounter(n);
                     return result;
                 }

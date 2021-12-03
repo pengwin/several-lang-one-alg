@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using SquareSums;
@@ -7,9 +8,9 @@ namespace Tests
 {
     public class CalculatorTests
     {
-        private  void Verify(IReadOnlyList<int> a, int n)
+        private  void Verify(Span<int> a, int n)
         {
-            a.Should().HaveCount(n);
+            a.Length.Should().Be(n);
 
             var unique = new HashSet<int>();
 

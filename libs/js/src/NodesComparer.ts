@@ -4,19 +4,29 @@ import { Node } from './Node';
 export class NodesComparer {
     private _path?: Path | null;
     private _cache: Array<number>;
+    private _maxCachePosition: number;
 
     constructor(path: Path | null, maxN: number) {
-        this._cache = new Array(maxN + 1);
+        let cache = new Array(maxN + 1);
+        for(let i = 0; i < cache.length; i++) {
+            cache[i] = -1;
+        }
+        this._cache = cache;
         this._path = path;
+        this._maxCachePosition = 0;
     }
 
     flushCache() {
         if (!this._path) {
             return;
         }
+        if (this._maxCachePosition == 0) {
+            return;
+        }
         for(let i = 0; i < this._cache.length; i++) {
             this._cache[i] = -1;
         }
+        this._maxCachePosition = 0;
     }
 
     compare(x: Node, y: Node): number {
@@ -61,6 +71,9 @@ export class NodesComparer {
         if (result === -1) {
             result = node.pairsNotInPath(this._path);
             this._cache[node.value] = result;
+            if (node.value > this._maxCachePosition) {
+                this._maxCachePosition = node.value;
+            }
         }
         return result;
     }

@@ -50,7 +50,7 @@ namespace SquareSums
                 sorting.SortNodes(n.Pairs);
             }
 
-            sorting.SortNodes(_nodes!);
+            sorting.SortNodes(_nodes.AsSpan()!);
         }
 
         public bool FinalizePairsAndVerifyAllNodesHavePairs()
