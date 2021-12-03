@@ -87,26 +87,12 @@ namespace SquareSums
             {
                 return result;
             }
-            
-            result = PairsNotInPath(node, _path!);
+
+            var pairValues = node.PairsValues;
+            result = _path!.PairsNotInPath(pairValues);
             _cache[node.Value] = result;
             _maxCachePosition = Math.Max(node.Value, _maxCachePosition);
             return result;
-        }
-        
-        private static int PairsNotInPath(Node node, Path path)
-        {
-            var count = 0;
-            var pairs = node.Pairs;
-            for (var i = 0; i < pairs.Length; i++)
-            {
-                if (!path.Contains(pairs[i].Value))
-                {
-                    count++;
-                }
-            }
-
-            return count;
         }
     }
 }

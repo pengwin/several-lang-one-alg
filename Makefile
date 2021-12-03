@@ -66,7 +66,7 @@ time-js-bin: js-bin
 time-dotnet-bin: dotnet-bin
 	mkdir -p $(METRICS_DIR)
 	echo '' > ./metrics/dotnet.txt
-	$(TIME) ./bin/dotnet/SquareSumsCli 2>&1 | tee -a $(METRICS_DIR)/dotnet.txt
+	$(TIME) ./bin/dotnet_bin/SquareSumsCli 2>&1 | tee -a $(METRICS_DIR)/dotnet.txt
 
 time-rust-bin: rust-bin
 	mkdir -p $(METRICS_DIR)

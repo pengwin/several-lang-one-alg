@@ -4,9 +4,8 @@ using System.Runtime.CompilerServices;
 
 namespace SquareSums
 {
-    public class Path
+    public sealed class Path
     {
-        //private PathNode? _last;
         private int _count;
         private readonly bool[] _attached;
         private readonly int[] _nodes;
@@ -55,6 +54,20 @@ namespace SquareSums
             _attached[n] = false;
             _nodes[_count - 1] = 0;
             _count--;
+        }
+        
+        public int PairsNotInPath(Span<int> pairsValues)
+        {
+            var count = 0;
+            for (var i = 0; i < pairsValues.Length; i++)
+            {
+                if (!Contains(pairsValues[i]))
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         public Span<int> AsSpan()

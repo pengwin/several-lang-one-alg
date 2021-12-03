@@ -10,6 +10,7 @@ use crate::{
     path::Path,
 };
 
+#[cfg(feature = "qsort")]
 fn partition<N, C: FnMut(&N, &N) -> Ordering>(
     comparer: &mut C,
     nodes: &mut [N],
@@ -29,10 +30,12 @@ fn partition<N, C: FnMut(&N, &N) -> Ordering>(
     marker
 }
 
+#[cfg(feature = "qsort")]
 fn quicksort<N, C: FnMut(&N, &N) -> Ordering>(mut comparer: C, nodes: &mut [N]) {
     quicksort_recursive(&mut comparer, nodes, 0, nodes.len() - 1)
 }
 
+#[cfg(feature = "qsort")]
 fn quicksort_recursive<N, C: FnMut(&N, &N) -> Ordering>(
     comparer: &mut C,
     nodes: &mut [N],
@@ -50,8 +53,10 @@ fn quicksort_recursive<N, C: FnMut(&N, &N) -> Ordering>(
     quicksort_recursive(comparer, nodes, pivot + 1, end);
 }
 
+#[cfg(feature = "qsort")]
 pub struct QSortNodesSorting {}
 
+#[cfg(feature = "qsort")]
 impl QSortNodesSorting {
     pub fn new() -> QSortNodesSorting {
         QSortNodesSorting {}
@@ -62,10 +67,12 @@ impl QSortNodesSorting {
     }
 }
 
+#[cfg(feature = "qsort")]
 pub struct QSortNodesSortingWithCache {
     cache: PairsNotInPathCache,
 }
 
+#[cfg(feature = "qsort")]
 impl QSortNodesSortingWithCache {
     pub fn new(n: u32) -> QSortNodesSortingWithCache {
         QSortNodesSortingWithCache {

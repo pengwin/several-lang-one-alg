@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 square-sums = { path = "../square-sums" }
-pprof = { version = "0.4", features = ["flamegraph", "protobuf"] }
+pprof = { version = "0.6.1", features = ["flamegraph", "protobuf"] }

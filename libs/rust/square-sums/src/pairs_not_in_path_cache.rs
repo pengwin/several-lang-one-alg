@@ -1,13 +1,13 @@
-use std::{ops::Deref, rc::Rc};
+use std::rc::Rc;
 
 use crate::{node::Node, path::Path};
 
-fn pairs_not_in_path(node: &Rc<Node>, path: &Path) -> Result<u32, String> {
+fn count_pairs_not_in_path(node: &Rc<Node>, path: &Path) -> Result<u32, String> {
     let mut count = 0;
-    let pair_values_ref = node.pair_values()?;
-    let pair_values = pair_values_ref.deref();
-    for v in pair_values {
-        if path.contains(*v) {
+    let pair_values = node.pair_values()?;
+    let values_size = pair_values.len();
+    for index in 0..values_size {
+        if path.contains(pair_values[index]) {
             continue;
         }
         count += 1;
@@ -32,9 +32,7 @@ impl PairsNotInPathCache {
         if self.max_cache_position == 0 {
             return;
         }
-        for i in 0..self.cache.len() {
-            self.cache[i] = None
-        }
+        self.cache.fill(None);
         self.max_cache_position = 0;
     }
 
@@ -45,7 +43,7 @@ impl PairsNotInPathCache {
             return Ok(result);
         }
 
-        let pairs = pairs_not_in_path(node, path)?;
+        let pairs = count_pairs_not_in_path(node, path)?;
         self.cache[index] = Some(pairs);
         if index > self.max_cache_position {
             self.max_cache_position = index;

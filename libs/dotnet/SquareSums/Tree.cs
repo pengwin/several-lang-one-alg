@@ -69,12 +69,6 @@ namespace SquareSums
                 {
                     return false;
                 }
-
-                for (var j = 0; j < node.Pairs.Length; j++)
-                {
-                    var pair = node.Pairs[j];
-                    pair.FinalizePairs();
-                }
             }
 
             return true;
