@@ -44,20 +44,13 @@ namespace SquareSums
 
         public void FinalizePairs()
         {
-            _pairs = CopySource(_buildTimePairs);
-            _values = CopySource(_buildTimeValues);
+            _pairs = _buildTimePairs.ToArray();
+            _values = _buildTimeValues.ToArray();
             _buildTimePairs.Clear();
             _buildTimeValues.Clear();
         }
 
         public int PairsCount => _pairs.Length;
-
-        private static T[] CopySource<T>(List<T> source)
-        {
-            var sourceSpan = CollectionsMarshal.AsSpan(source);
-            var result = new T[sourceSpan.Length];
-            sourceSpan.CopyTo(result.AsSpan());
-            return result;
-        }
+        
     };
 }

@@ -2,26 +2,9 @@
 
 | Lang | Time (s) | Size (transferred) | Size (resources) |
 | ---- | ---- | ------------------ | ------------- |
-| Rust | 30.947 | 22.7 Kb | 46.8 Kb |
-| Go | 66.127 | 617 Kb | 2.1 Mb |
-| C++ | 19.614 | 79.6 Kb | 243kb |
-| .NET (Blazor AOT) | 575.855 | 6.8 Mb | 15.6 Mb |
-| .NET (Blazor) | 843.852 | 3.8 Mb | 5.3 Mb |
-| JS | 15.290 | 4.6kb | 46.7kb |
-
-calc rust: calc rust: 27459.7080078125 ms (2-2000)
-rust size: 22.7kb, transferred 46.8 kb resources
-
-calc golang: 56932.837890625 ms (2-1999)
-golang size: 617kb transferred 2.1 Mb resource
-
-calc cpp: 16817.430908203125 ms (2-2000)
-cpp size: 79.6kb transferred 243kb resources
-
-calc dotNet-aot: 575855.1560058594 ms
-.net size: 6.8 Mb transferred 15.6 Mb size
-
-calc dotNet-no-aot: 843852.8620605469 ms
-
-calc js: 16529.2939453125 ms
-js size 4.6kb 46.7kb 
+| Rust | 30.93 | 22.8 Kb | 46.8 Kb |
+| Go | 65.35 | 618 Kb | 2.1 Mb |
+| C++ | 19.55 | 79.8 Kb | 244kb |
+| .NET (Blazor AOT) | 588.62 | 7.7 Mb | 17.8 Mb |
+| .NET (Blazor) | 825.09 | 3.8 Mb | 5.3 Mb |
+| JS | 15.42 | 4.6kb | 46.7kb |

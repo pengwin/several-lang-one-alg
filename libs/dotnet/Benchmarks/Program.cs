@@ -4,4 +4,4 @@ using System;
 using BenchmarkDotNet.Running;
 using Benchmarks;
 
-var summary = BenchmarkRunner.Run<BenchmarkSquareSums>();
+var summary = BenchmarkRunner.Run<CopyArrayBenchmark>();

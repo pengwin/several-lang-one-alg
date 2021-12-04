@@ -4,7 +4,7 @@ declare var window: any;
 
 let cppApi = {
   _FullSquareSums(from: number, to: number) {
-    
+
   }
 };
 
@@ -100,7 +100,7 @@ function createWasmMap() {
       document.body.appendChild(script);
     }),
     runner: () => new Promise<void>((resolve, reject) => {
-      cppApi._FullSquareSums(2,2000);
+      cppApi._FullSquareSums(2, 2000);
       resolve();
     })
   });
@@ -124,7 +124,7 @@ function createWasmMap() {
       document.body.appendChild(script);
     }),
     runner: () => new Promise<void>((resolve, reject) => {
-      const res = window.rust_square_sums(2,2000);
+      const res = window.rust_square_sums(2, 2000);
       resolve(res);
     })
   });
@@ -148,9 +148,15 @@ function createWasmMap() {
 
 const wasmMap = createWasmMap();
 
+interface State {
+  status: string;
+  result: number;
+  wasmLoaded: any
+}
+
 
 function App() {
-  const [state, setState] = useState<{ wasmLoaded: any }>({ wasmLoaded: {} });
+  const [state, setState] = useState<State>({ status: '', result: 0, wasmLoaded: {} });
 
   const loadWasm = (key: string) => wasmMap.get(key)?.loader().then(() => {
     const wasmLoaded = { ...state.wasmLoaded };
@@ -159,8 +165,22 @@ function App() {
   });
 
   const runWasm = (key: string) => {
+    setState({...state, status: `Calculating ${key}`});
     console.time(`calc ${key}`);
-    wasmMap.get(key)?.runner().then(() => console.timeEnd(`calc ${key}`)).catch(() => console.timeEnd(`calc ${key}`));
+
+    function endCalc(startTime: number) {
+      console.timeEnd(`calc ${key}`);
+      const end = performance.now();
+      const result = (end - startTime)/1000.0;
+      console.log(result);
+      setState({...state, status: `Result for ${key}`, result});
+    }
+
+    setTimeout(() => {
+      const start = performance.now();
+      wasmMap.get(key)?.runner().then(() => endCalc(start)).catch(() => endCalc(start));
+    });
+    
   }
 
   const buttons = [];
@@ -176,7 +196,13 @@ function App() {
 
   return (
     <div>
-      {buttons}
+      <div>
+        <h3>{state.status}</h3>
+        {state.result > 0 ? <div>{state.result.toFixed(2)} s</div> : null}
+      </div>
+      <div>
+        {buttons}
+      </div>
     </div>
   );
 }
