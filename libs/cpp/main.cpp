@@ -5,12 +5,22 @@
 #include "NativeNodesSorting.hpp"
 #include "QSortNodesSorting.hpp"
 
-int main() {
+int main(int argc, char** argv) {
+
+    int from = 2;
+    int to = 2000;
+    if (argc >= 3) {
+        from = atoi(argv[1]);
+        to = atoi(argv[2]);
+    }
+
+    std::cout << "Calculating from: " << from  << " to:" << to << "\n";
+
+    for (int i = 0; i < argc; ++i)
+        std::cout << argv[i] << "\n";
+
     Metrics* metrics = new Metrics(false);
-    /*int n = 8;
-    std::vector<int> res = square_sums_row(n, metrics);
-    std::cout << n << ": " << res.size() << "\n";*/
-    for (int n = 2 ; n <= 2000 ; n++) {
+    for (int n = from ; n <= to ; n++) {
         std::vector<int> res = square_sums_row<NativeNodesSorting>(n, metrics);
     }
     metrics->PrintMetrics();

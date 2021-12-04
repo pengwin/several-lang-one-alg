@@ -6,6 +6,9 @@ TIME=/usr/bin/time --verbose # use gnu-time, not bash builtin time
 
 METRICS_DIR=./metrics
 
+FROM=2
+TO=2000
+
 build: go-bin cpp-bin dotnet-bin js-bin
 
 wasm: go-wasm cpp-wasm dotnet-wasm rust-wasm
@@ -51,27 +54,27 @@ rust-wasm:
 time-go-bin: go-bin
 	mkdir -p $(METRICS_DIR)
 	echo '' > $(METRICS_DIR)/go.txt
-	$(TIME) ./bin/go 2>&1 | tee -a $(METRICS_DIR)/go.txt
+	$(TIME) ./bin/go $(FROM) $(TO) 2>&1 | tee -a $(METRICS_DIR)/go.txt
 
 time-cpp-bin: cpp-bin
 	mkdir -p $(METRICS_DIR)
 	echo '' > $(METRICS_DIR)/cpp.txt
-	$(TIME) ./bin/cpp 2>&1 | tee -a $(METRICS_DIR)/cpp.txt
+	$(TIME) ./bin/cpp $(FROM) $(TO) 2>&1 | tee -a $(METRICS_DIR)/cpp.txt
 
 time-js-bin: js-bin
 	mkdir -p $(METRICS_DIR)
 	echo '' > $(METRICS_DIR)/js.txt
-	$(TIME) node ./bin/nodejs/index-cli.js 2>&1 | tee -a $(METRICS_DIR)/js.txt
+	$(TIME) node ./bin/nodejs/index-cli.js $(FROM) $(TO) 2>&1 | tee -a $(METRICS_DIR)/js.txt
 
 time-dotnet-bin: dotnet-bin
 	mkdir -p $(METRICS_DIR)
 	echo '' > ./metrics/dotnet.txt
-	$(TIME) ./bin/dotnet/SquareSumsCli 2>&1 | tee -a $(METRICS_DIR)/dotnet.txt
+	$(TIME) ./bin/dotnet/SquareSumsCli $(FROM) $(TO)  2>&1 | tee -a $(METRICS_DIR)/dotnet.txt
 
 time-rust-bin: rust-bin
 	mkdir -p $(METRICS_DIR)
 	echo '' > ./metrics/rust.txt
-	$(TIME) ./bin/rust 2>&1 | tee -a $(METRICS_DIR)/rust.txt
+	$(TIME) ./bin/rust $(FROM) $(TO) 2>&1 | tee -a $(METRICS_DIR)/rust.txt
 
 time-bin: time-dotnet-bin time-go-bin time-js-bin time-cpp-bin time-rust-bin
 

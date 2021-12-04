@@ -1,21 +1,42 @@
 package main
 
 import (
+	"fmt"
+	"os"
+	"strconv"
+
 	sums "gitlab.com/ikruchkov0/codewars_katas/go/square-sums-simple/pkg"
 )
 
 func sortingFactory(path *sums.Path, maxN int) sums.NodesSortingFacade {
-	//return sums.NewNodesSortingCustom(path, maxN)
 	return *sums.NewNodesSortingFacade(path, maxN)
+}
+
+func convertWithPanic(str string) int {
+	res, err := strconv.Atoi(str)
+	if err != nil {
+		panic("Unable to convert argument")
+	}
+	return res
 }
 
 func main() {
 
-	metrics := sums.NewMetrics(false)
-	/*sums.SquareSumsRow(279)
-	return*/
+	args := os.Args[1:]
 
-	for n := 2; n <= 2000; n++ {
+	from := 2
+	to := 2000
+
+	if len(args) >= 2 {
+		from = convertWithPanic(args[0])
+		to = convertWithPanic(args[1])
+	}
+
+	fmt.Printf("Calculating from: %d to: %d\n", from, to)
+
+	metrics := sums.NewMetrics(false)
+
+	for n := from; n <= to; n++ {
 		a := sums.SquareSumsRow(n, metrics, sortingFactory)
 		if a == nil {
 			// no
