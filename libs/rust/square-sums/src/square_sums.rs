@@ -108,7 +108,7 @@ where
                     if let Some(m) = metrics.as_mut() {
                         m.finalize_dfs_counter(n);
                     }
-                    return Ok(Some(path.into()));
+                    return Ok(Some(path.items()));
                 }
             }
             return Ok(None);

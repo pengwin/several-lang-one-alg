@@ -76,7 +76,7 @@ namespace SquareSums
             for (int i = 0; i < nodes.Length; i++)
             {
                 var node = nodes[i];
-                var pairsCount = _path == null ? node.PairsCount : PairsNotInPath(node, _path);
+                var pairsCount = _path?.PairsNotInPath(node.PairsValues) ?? node.PairsCount;
 
                 var list = sortList[pairsCount];
                 if (list == null)
@@ -105,21 +105,6 @@ namespace SquareSums
                     targetPos++;
                 }
             }
-        }
-        
-        private static int PairsNotInPath(Node node, Path path)
-        {
-            var count = 0;
-            var pairs = node.Pairs;
-            for (var i = 0; i < pairs.Length; i++)
-            {
-                if (!path.Contains(pairs[i].Value))
-                {
-                    count++;
-                }
-            }
-
-            return count;
         }
     }
 }

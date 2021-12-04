@@ -58,26 +58,23 @@ impl Node {
     }
 
     pub fn finalize(&self) -> Result<(), String> {
-        let pairs_ref = self
+        let pairs = self
             .pairs
             .try_borrow()
             .map_err(|_| format!("BorrowError. Pairs of node {} already borrowed", self.value))?;
-        let count = pairs_ref.len();
+        let count = pairs.len();
         self.count.replace(count);
-        let pairs = pairs_ref.deref();
-        let mut pairs_values = self.pairs_values.try_borrow_mut().map_err(|_| {
-            format!(
-                "BorrowMutError. Pairs values of node {} already borrowed",
-                self.value
-            )
-        })?;
-        for p in pairs {
+
+        let mut pair_values = vec![0; count];
+        for i in 0..count {
+            let p = &pairs[i];
             let pair = p
                 .upgrade()
                 .ok_or("Received unexpected null or deallocated node")?;
 
-            pairs_values.push(pair.value);
+            pair_values[i] = pair.value;
         }
+        self.pairs_values.replace(pair_values);
         Ok(())
     }
 }

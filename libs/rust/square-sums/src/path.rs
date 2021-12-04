@@ -1,29 +1,16 @@
-use std::rc::Rc;
-use std::convert::Into;
-
-struct PathNode {
-    pub prev: Option<Rc<PathNode>>,
-    pub value: u32,
-}
-
-impl PathNode {
-    pub fn new(n: u32, prev: Option<Rc<PathNode>>) -> PathNode{
-        PathNode{value: n, prev}
-    }
-}
-
 pub struct Path {
     pub count: u32,
-    last: Option<Rc<PathNode>>,
+    items: Vec<u32>,
     attached: Vec<bool>,
 }
 
 impl Path {
     pub fn new(n: u32) -> Path {
+        let size = n as usize +1;
         Path { 
             count: 0, 
-            last: None, 
-            attached: vec![false; n as usize +1]
+            items: vec![0; size],
+            attached: vec![false; size]
         }
     }
 
@@ -37,8 +24,8 @@ impl Path {
             return Err(format!("{} already attached", n))
         }
 
-        let prev = self.last.clone();
-        self.last = Some(Rc::new(PathNode::new(n, prev)));
+        let items_pos = self.count as usize;
+        self.items[items_pos] = n;
         self.count += 1;
         self.attached[index] = true;
 
@@ -46,32 +33,24 @@ impl Path {
     }
 
     pub fn pop(&mut self) {
-        match &self.last {
-            Some(last) => {
-                let index = last.value as usize;
-                self.attached[index] = false;
-                let prev = last.prev.clone();
-                self.last = prev;
-                self.count -= 1;
-            },
-            None => return
+        if self.count == 0 {
+            return;
         }
+
+        let current_pos = self.count as usize - 1;
+        let last = self.items[current_pos];
+        self.items[current_pos] = 0;
+
+        let index = last as usize;
+        self.attached[index] = false;
+        self.count -= 1;
     }
-}
 
-fn path_to_vector(node: Option<Rc<PathNode>>, v: &mut Vec<u32>) {
-    let mut prev = node;
-    while let Some(node) = prev {
-        v.push(node.value);
-        prev = node.prev.clone();
-    }
-}
-
-impl Into<Vec<u32>> for Path {
-
-    fn into(self) -> Vec<u32> {
-        let mut v = Vec::new();
-        path_to_vector(self.last.clone(), &mut v);
-        v
+    pub fn items(&self) -> Vec<u32> {
+        let size = self.count as usize;
+        let slice = &self.items[0..size];
+        let mut result = vec![];
+        result.extend_from_slice(slice);
+        result
     }
 }
