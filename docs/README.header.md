@@ -2,8 +2,13 @@
 
 Solution for [cata](https://www.codewars.com/kata/5a667236145c462103000091) from codewars implemented in different languages.
 
-**Warning** The 
+## Requirements
 
+OS: Linux
+Installed developments tools: GCC(11+), Rust (1.5+), Nodejs (14+), Golang, Dotnet (6+), Emscripten (3+), GNU Time, Bash, Make
+TDB Docker build 
+
+## Test run results
 
 ### Machine/OS parameters:
 
@@ -43,6 +48,20 @@ Node version: v14.15.5
 ```
 tsc --outDir ../../bin/nodejs --target es2016 --module none --excludeFiles **/*.test.ts
 node bin/nodejs/index-cli.js
+```
+
+#### Rust
+Rustc version 1.56.1
+```
+cargo build --release
+```
+Release profile
+```
+[profile.release]
+codegen-units = 1
+panic = "abort"
+opt-level = 3
+overflow-checks = false
 ```
 
 ### Results

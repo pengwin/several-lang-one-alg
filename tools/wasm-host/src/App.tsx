@@ -13,6 +13,8 @@ let jsApi = {
   }
 }
 
+window.wasmRunner = window.wasmRunner || { from: 2, to: 2000 };
+
 function getDotnetDefinition(prefix: string) {
   return {
     loader: () => new Promise<void>((resolve, reject) => {
@@ -36,7 +38,7 @@ function getDotnetDefinition(prefix: string) {
       document.body.appendChild(script);
     }),
     runner: () => new Promise<void>((resolve, reject) => {
-      window.DotNet.invokeMethodAsync('SquareSumsWasm', 'FullSquareSums', 2, 2000)
+      window.DotNet.invokeMethodAsync('SquareSumsWasm', 'FullSquareSums', window.wasmRunner.from, window.wasmRunner.to)
         .then((data: any) => {
           console.log(data);
           resolve();
@@ -48,9 +50,9 @@ function getDotnetDefinition(prefix: string) {
 function createWasmMap() {
   const map = new Map<string, { loader: () => Promise<void>, runner: () => Promise<void> }>();
 
-  map.set('dotNet-aot', getDotnetDefinition('dotnet-aot'));
+  map.set('dotnet_aot', getDotnetDefinition('dotnet-aot'));
 
-  map.set('dotNet-no-aot', getDotnetDefinition('dotnet-no-aot'));
+  map.set('dotnet_no_aot', getDotnetDefinition('dotnet-no-aot'));
 
   map.set('golang', {
     loader: () => new Promise<void>((resolve, reject) => {
@@ -72,7 +74,7 @@ function createWasmMap() {
       document.body.appendChild(script);
     }),
     runner: () => new Promise<void>((resolve, reject) => {
-      window.fullSquareSums(2, 2000);
+      window.fullSquareSums(window.wasmRunner.from, window.wasmRunner.to);
       resolve();
     })
   });
@@ -100,7 +102,7 @@ function createWasmMap() {
       document.body.appendChild(script);
     }),
     runner: () => new Promise<void>((resolve, reject) => {
-      cppApi._FullSquareSums(2, 2000);
+      cppApi._FullSquareSums(window.wasmRunner.from, window.wasmRunner.to);
       resolve();
     })
   });
@@ -124,7 +126,7 @@ function createWasmMap() {
       document.body.appendChild(script);
     }),
     runner: () => new Promise<void>((resolve, reject) => {
-      const res = window.rust_square_sums(2, 2000);
+      const res = window.rust_square_sums(window.wasmRunner.from, window.wasmRunner.to);
       resolve(res);
     })
   });
@@ -138,7 +140,7 @@ function createWasmMap() {
       resolve();
     }),
     runner: () => new Promise<void>((resolve, reject) => {
-      jsApi.fullSquareSums(2, 2000);
+      jsApi.fullSquareSums(window.wasmRunner.from, window.wasmRunner.to);
       resolve();
     })
   });
@@ -165,7 +167,7 @@ function App() {
   });
 
   const runWasm = (key: string) => {
-    setState({...state, status: `Calculating ${key}`});
+    setState({...state, status: `Calculating ${key} from: ${window.wasmRunner.from} to: ${window.wasmRunner.to}`});
     console.time(`calc ${key}`);
 
     function endCalc(startTime: number) {
@@ -188,8 +190,8 @@ function App() {
     buttons.push(<div key={key}>
       <p>{key}</p>
       {!state.wasmLoaded[key]
-        ? <button onClick={() => loadWasm(key)}>Load WASM</button>
-        : <button onClick={() => runWasm(key)}>Run WASM</button>
+        ? <button id={key+'_load'} onClick={() => loadWasm(key)}>Load WASM</button>
+        : <button id={key+'_run'} onClick={() => runWasm(key)}>Run WASM</button>
       }
     </div>);
   }
@@ -198,7 +200,7 @@ function App() {
     <div>
       <div>
         <h3>{state.status}</h3>
-        {state.result > 0 ? <div>{state.result.toFixed(2)} s</div> : null}
+        {state.result > 0 ? <div id="result">{state.result.toFixed(2)} s</div> : null}
       </div>
       <div>
         {buttons}

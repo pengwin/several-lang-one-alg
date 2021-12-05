@@ -1,0 +1,1 @@
+![binary_duration](docs/histograms/binary_duration.png "Binary Duration")

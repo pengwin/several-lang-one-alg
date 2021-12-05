@@ -24,6 +24,8 @@ yarn-error.log*
 
 /public/dotnet-aot
 /public/dotnet-no-aot
-/public/cpp-wasm*
-/public/go-*
+/public/cpp-wasm.js
+/public/cpp-wasm.wasm
+/public/go-main.wasm
+/public/go-wasm_exec.js
 /public/rust-wasm

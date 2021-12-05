@@ -68,7 +68,19 @@ function tableHint(metricsMap) {
     return result;
 }
 
-function main(metricsPath) {
+function transformMetricsForJson(metrics) {
+    const result = {};
+    for (let key in metrics) {
+        const data = metrics[key];
+        result[key] = {
+            time: parseFloat(data.elapsedTime.replace('0:', '')),
+            maxMem: parseFloat(data.maxMem) / 1024.0
+        }
+    }
+    return result;
+}
+
+function main(metricsPath, jsonPath) {
 
     const metricsMap = {
         'elapsedTime': {
@@ -122,15 +134,18 @@ function main(metricsPath) {
     };
     const metrics = loadAllMetrics(metricsPath, binariesMap, metricsMap);
     const table = markdownTable(metrics, metricsMap);
-
+    
     console.log(table);
     console.log('');
     console.log(tableHint(metricsMap));
+
+    fs.writeFileSync(jsonPath, JSON.stringify(transformMetricsForJson(metrics)));
 }
 
 const metrics_path = process.argv[2];
+const json_path = process.argv[3];
 
-main(metrics_path);
+main(metrics_path, json_path);
 
 
 

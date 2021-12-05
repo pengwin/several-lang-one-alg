@@ -1,10 +1,13 @@
-.PHONY: all build wasm go-bin cpp-bin dotnet-bin js-bin rust-bin go-wasm cpp-wasm dotnet-wasm rust-wasm
+.PHONY: all build wasm go-bin cpp-bin dotnet-bin js-bin rust-bin go-wasm cpp-wasm dotnet-wasm rust-wasm build-plotter histograms
 all: build
 
 SHELL = /bin/bash
 TIME=/usr/bin/time --verbose # use gnu-time, not bash builtin time
 
 METRICS_DIR=./metrics
+METRICS_JSON=./metrics/metrics.json
+WASM_METRICS_JSON=./metrics/metrics-wasm.json
+HISTOGRAMS_PATH=./docs/histograms
 
 FROM=2
 TO=2000
@@ -13,7 +16,7 @@ build: go-bin cpp-bin dotnet-bin js-bin
 
 wasm: go-wasm cpp-wasm dotnet-wasm rust-wasm
 
-wasm-copy: #wasm
+wasm-copy: wasm
 	mkdir -p ./tools/wasm-host/public/dotnet-aot/
 	mkdir -p ./tools/wasm-host/public/dotnet-no-aot/
 	cp -rv ./wasm/dotnet/wwwroot/dotnet-aot/_framework ./tools/wasm-host/public/dotnet-aot/_framework
@@ -79,9 +82,23 @@ time-rust-bin: rust-bin
 time-bin: time-dotnet-bin time-go-bin time-js-bin time-cpp-bin time-rust-bin
 
 md-table: time-bin
-	node ./tools/graphs/src/index.js $(METRICS_DIR) > ./bin/results.md
+	node ./tools/graphs/src/index.js $(METRICS_DIR) $(METRICS_JSON) > ./bin/results.md
 
-readme: md-table
+md-wasm-table: wasm
+	node ./tools/wasm-collector/src/index.js $(WASM_METRICS_JSON) ./bin/results-wasm.md
+
+build-plotter:
+	make -C ./tools/plotter build
+
+plotter: build-plotter
+	mkdir -p $(HISTOGRAMS_PATH)
+	./bin/plotter $(METRICS_JSON) $(WASM_METRICS_JSON) $(HISTOGRAMS_PATH)
+
+readme: md-table md-wasm-table plotter
 	cat ./docs/README.header.md > ./README.md
 	cat ./bin/results.md >> ./README.md
+	cat ./docs/README.binary-diagrams.md >> ./README.md
+	cat ./docs/README.wasm.header.md >> ./README.md
+	cat ./bin/results-wasm.md >> ./README.md
+	cat ./docs/README.wasm-diagrams.md >> ./README.md
 
