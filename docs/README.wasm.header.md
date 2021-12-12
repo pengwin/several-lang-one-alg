@@ -29,7 +29,7 @@ emcc -O3 \
 ```
 
 #### Golang
-go version: go1.17.2 linux/amd64
+go version: go1.17.5 linux/amd64
 ```
 GOOS=js GOARCH=wasm go build -o $(OUTPUT_WASM) cmd/wasm/main.go 
 ```

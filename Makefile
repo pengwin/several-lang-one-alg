@@ -84,7 +84,7 @@ time-bin: time-dotnet-bin time-go-bin time-js-bin time-cpp-bin time-rust-bin
 md-table: time-bin
 	node ./tools/graphs/src/index.js $(METRICS_DIR) $(METRICS_JSON) > ./bin/results.md
 
-md-wasm-table: wasm
+md-wasm-table: wasm-copy
 	node ./tools/wasm-collector/src/index.js $(WASM_METRICS_JSON) ./bin/results-wasm.md
 
 build-plotter:

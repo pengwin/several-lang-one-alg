@@ -29,7 +29,7 @@ g++ -O3 -march=native main.cpp -o $(OUTPUT_BIN)
 ```
 
 #### Golang
-go version: go1.17.2 linux/amd64
+go version: go1.17.5 linux/amd64
 ```
 go build -o $(OUTPUT_BIN) cmd/cli/main.go 
 ```

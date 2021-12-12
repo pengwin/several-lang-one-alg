@@ -29,7 +29,7 @@ g++ -O3 -march=native main.cpp -o $(OUTPUT_BIN)
 ```
 
 #### Golang
-go version: go1.17.2 linux/amd64
+go version: go1.17.5 linux/amd64
 ```
 go build -o $(OUTPUT_BIN) cmd/cli/main.go 
 ```
@@ -69,11 +69,11 @@ overflow-checks = false
 
 | Lang |Time | Memory | Normal | Average | Bad | Worst | 
 | --- | ---- |  ---- |  ---- |  ---- |  ---- |  ---- | 
-| C++ | 0:08.88 |4680 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
-| Go | 0:12.56 |8464 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
-| .NET | 0:14.79 |157376 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
-| JS | 0:15.73 |70748 |1648/2000 |250/2000 |82/2000 |117080 for 102 |
-| Rust | 0:09.97 |4040 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
+| C++ | 0:09.00 |4684 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
+| Go | 0:12.03 |8340 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
+| .NET | 0:14.92 |157264 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
+| JS | 0:15.95 |71072 |1648/2000 |250/2000 |82/2000 |117080 for 102 |
+| Rust | 0:09.87 |3892 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
 
 
 - **Time** - Elapsed (wall clock) time (h:mm:ss or m:ss) 
@@ -114,7 +114,7 @@ emcc -O3 \
 ```
 
 #### Golang
-go version: go1.17.2 linux/amd64
+go version: go1.17.5 linux/amd64
 ```
 GOOS=js GOARCH=wasm go build -o $(OUTPUT_WASM) cmd/wasm/main.go 
 ```
@@ -158,12 +158,12 @@ Tested on **HeadlessChrome/97.0.4691.0**
 
 | Lang |Time | Memory | Size | 
 | --- | ---- |  ---- |  ---- | 
-| C++ (Wasm) | 10.02 |768.00 |237.97 |
-| Rust (Wasm) | 15.34 |256.00 |45.76 |
-| JS (Browser) | 15.84 |17408.00 |55.15 |
-| Go (Wasm) | 34.04 |768.00 |2058.34 |
-| Blazor (AOT) | 163.12 |2484.00 |15263.32 |
-| Blazor | 226.65 |1932.00 |5146.18 |
+| C++ (Wasm) | 9.82 |768.00 |237.97 |
+| Rust (Wasm) | 14.90 |256.00 |45.76 |
+| JS (Browser) | 15.57 |17408.00 |55.15 |
+| Go (Wasm) | 32.47 |512.00 |2058.38 |
+| Blazor (AOT) | 159.62 |2228.00 |15263.32 |
+| Blazor | 219.95 |1676.00 |5146.18 |
 - **Time** - Calculation duration measured using browser Performance Api 
 - **Memory** - Difference (in Kb) between JSHeapTotalSize before loading script and after calculations run 
 - **Size** - Size (in Kb) of files loaded to run calculations 
