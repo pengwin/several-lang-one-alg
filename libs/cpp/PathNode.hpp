@@ -1,28 +1,24 @@
 #ifndef __path_node
 #define __path_node
 
-class PathNode
-{
-private:
-    PathNode *prev;
-    int value;
+class PathNode {
+    private:
+        PathNode *prev;
+        int value;
+    
+    public:
+        PathNode(int n, PathNode *prevNode) {
+            value = n;
+            prev = prevNode;
+        }
 
-public:
-    PathNode(int n, PathNode *prevNode)
-    {
-        value = n;
-        prev = prevNode;
-    }
+        int Value() {
+            return value;
+        }
 
-    int Value()
-    {
-        return value;
-    }
-
-    PathNode *Prev()
-    {
-        return prev;
-    }
+        PathNode* Prev() {
+            return prev;
+        }
 };
 
 #endif

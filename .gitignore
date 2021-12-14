@@ -2,3 +2,4 @@ bin
 wasm
 .vscode
 metrics
+temp_langs/

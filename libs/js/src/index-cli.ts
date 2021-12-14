@@ -1,7 +1,4 @@
-import { Metrics } from './Metrics';
-import { squareSumsRow } from './SquareSums';
-import { NodesSortingFactories } from './NodesSorting';
-
+import { squareSumsRow } from './sums';
 function main(args: Array<string>) {
 
   let from = 2;
@@ -14,13 +11,10 @@ function main(args: Array<string>) {
 
   console.log(`Calculating from: ${from} to: ${to}`);
 
-  let metrics = new Metrics(false);
-  //return squareSumsRow(886);
   
   for (let n = from; n <= to; n++) {
-    let res = squareSumsRow(n, metrics, NodesSortingFactories.CreateNative);
+    let res = squareSumsRow(n);
   }
-  metrics.printMetrics();
 }
 
 main(process.argv);

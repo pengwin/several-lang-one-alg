@@ -1,77 +1,62 @@
 #include <vector>
-#include <iostream>
 
 #include "Node.hpp"
-#include "NodesSorting.hpp"
 
-template<class T>
-class Tree
-{
-private:
-    std::vector<Node *>*nodes;
 
-    Node *getOrCreate(int n)
-    {
-        Node *node = nodes->at(n - 1);
-        if (node == NULL)
-        {
-            node = new Node(n);
-            (*nodes)[n - 1] = node;
+class Tree {
+    private:
+        std::vector<Node*> nodes;
+
+        Node* getOrCreate(int n) {
+            Node *node = nodes[n-1];
+            if (node == NULL) {
+                node = new Node(n);
+                nodes[n-1] = node;
+            }
+            return node;
         }
-        return node;
-    }
 
-public:
-    Tree(int n)
-    {
-        nodes = new std::vector<Node *>(n);
-    }
-
-    ~Tree()
-    {
-        for(Node *node : *(nodes)) {
-            delete node;
+    public:
+        Tree(int n) {
+            nodes = std::vector<Node*>(n);
         }
-        nodes->clear();
-        delete nodes;
-    }
 
-    std::vector<Node *>* Roots()
-    {
-        return nodes;
-    }
+        ~Tree() {
+            for (Node *n : nodes) {
+                delete n;
+            }
+            nodes.clear();
+        }
 
-    void AddPair(int head, int tail)
-    {
-        Node *headNode = getOrCreate(head);
-        Node *tailNode = getOrCreate(tail);
-        headNode->Add(tailNode);
-    }
+        std::vector<Node*> Roots() {
+            return nodes;
+        }
 
-    bool VerifyAllNodesHavePairs()
-    {
-        for (Node *n : *nodes)
-        {
-            if (n == NULL)
-            {
-                return false;
+        void AddPair(int head, int tail) {
+            Node *headNode = getOrCreate(head);
+	        Node *tailNode = getOrCreate(tail);
+            headNode->Add(tailNode);
+        }
+
+        bool VerifyAllNodesHavePairs() {
+            for (Node *n : nodes) {
+                if (n == NULL) {
+                    return false;
+                }
+
+                if (n->PairsCount() == 0) {
+                    return false;
+                }
             }
 
-            if (n->PairsCount() == 0)
-            {
-                return false;
+            return true;
+        }
+
+        void SortPairs() {
+            for (Node *n : nodes) {
+                n->SortPairs();
             }
+            std::sort(nodes.begin(), nodes.end(), Node::CompareNodes);
         }
 
-        return true;
-    }
-
-    void SortPairsWithSorting(NodesSorting<T> *sorting)
-    {
-        for (Node *n : *nodes)
-        {
-            sorting->SortNodes(n->Pairs());
-        }
-        sorting->SortNodes(nodes);
-    }
 };

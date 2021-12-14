@@ -93,7 +93,7 @@ async function testLang(lang) {
     response.buffer().then((buf) => {
       networkMetrics.size += buf.length;
     }).catch((e) => console.error(`Unable to read response body for ${response.url()}`, e));
-    
+
   });
 
   await page.evaluate((id) => {
@@ -148,16 +148,16 @@ async function testLang(lang) {
 
 const metricsMap = {
   'duration': {
-      tableHeader: 'Time',
-      hint: 'Calculation duration measured using browser Performance Api'
+    tableHeader: 'Time',
+    hint: 'Calculation duration measured using browser Performance Api'
   },
   'totalHeapDiff': {
-      tableHeader: 'Memory',
-      hint: 'Difference (in Kb) between JSHeapTotalSize before loading script and after calculations run'
+    tableHeader: 'Memory',
+    hint: 'Difference (in Kb) between JSHeapTotalSize before loading script and after calculations run'
   },
   'size': {
-      tableHeader: 'Size',
-      hint: 'Size (in Kb) of files loaded to run calculations'
+    tableHeader: 'Size',
+    hint: 'Size (in Kb) of files loaded to run calculations'
   }
 };
 
@@ -168,21 +168,21 @@ function markdownTable(metrics, metricsMap) {
   let content = '';
 
   for (let metricName in metricsMap) {
-      const metricDef = metricsMap[metricName];
-      header += `${metricDef.tableHeader} | `;
-      delimiter += ' ---- | '
+    const metricDef = metricsMap[metricName];
+    header += `${metricDef.tableHeader} | `;
+    delimiter += ' ---- | '
   }
 
   header += '\n';
   content += '\n';
 
   for (let key in metrics) {
-      content += `| ${key} | `;
-      const metric = metrics[key];
-      for (let metricName in metricsMap) {
-          content += `${metric[metricName].toFixed(2)} |`
-      }
-      content += '\n';
+    content += `| ${key} | `;
+    const metric = metrics[key];
+    for (let metricName in metricsMap) {
+      content += `${metric[metricName].toFixed(2)} |`
+    }
+    content += '\n';
   }
 
   return header + delimiter + content;
@@ -193,8 +193,8 @@ function tableHint(metricsMap) {
   let result = '';
 
   for (let metricName in metricsMap) {
-      const metricDef = metricsMap[metricName];
-      result += `- **${metricDef.tableHeader}** - ${metricDef.hint} \n`;
+    const metricDef = metricsMap[metricName];
+    result += `- **${metricDef.tableHeader}** - ${metricDef.hint} \n`;
   }
 
   return result;
@@ -203,16 +203,15 @@ function tableHint(metricsMap) {
 async function main(jsonPath, markdownPath) {
 
   let langs = [
-    'cpp', 'rust',
-    'js', 'golang', 
-    'dotnet_aot','dotnet_no_aot'
+    'cpp',
+    'js', 'golang',
+    //'dotnet_aot', 'dotnet_no_aot'
   ];
 
   let langsMap = {
     'cpp': 'C++ (Wasm)',
     'js': 'JS (Browser)',
     'golang': 'Go (Wasm)',
-    'rust': 'Rust (Wasm)',
     'dotnet_aot': 'Blazor (AOT)',
     'dotnet_no_aot': 'Blazor'
   }
@@ -221,19 +220,26 @@ async function main(jsonPath, markdownPath) {
 
   for (let lang of langs) {
     const r = await testLang(lang);
+    if (!r) {
+      r = {
+        duration: 0.0,
+        totalHeapDiff: 0.0,
+        size: 0.0
+      };
+    }
     metrics[langsMap[lang]] = r;
     console.log(`Result ${r.duration} seconds`);
   }
 
   const table = markdownTable(metrics, metricsMap);
   const hint = tableHint(metricsMap);
-  const markdown = table+hint;
+  const markdown = table + hint;
 
   console.log(markdown);
 
   fs.writeFileSync(markdownPath, markdown);
   fs.writeFileSync(jsonPath, JSON.stringify(metrics));
-  
+
 }
 
 const json_path = process.argv[2];

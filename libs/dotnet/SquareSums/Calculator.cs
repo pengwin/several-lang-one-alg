@@ -1,42 +1,27 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace SquareSums
 {
     public static class Calculator
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsFairSquare(int n)
-        {
-            int h = n & 0xF;  // h is the last hex "digit"
-            if (h > 9)
-                return false;
-            // Use lazy evaluation to jump out of the if statement as soon as possible
-            if (h != 2 && h != 3 && h != 5 && h != 6 && h != 7 && h != 8)
-            {
-                int t = (int) Math.Floor( Math.Sqrt(n));
-                return t*t == n;
-            }
-            return false;
+        private static bool IsFairSquare(int n) {
+            double sqrtVal = Math.Sqrt(n);
+            return sqrtVal - Math.Floor(sqrtVal) == 0;
         }
 
-        private static Tree? BuildTree(int n, NodesSortingFacade sorting)
-        {
-            var tree = new Tree(n);
+        private static Tree? BuildTree(int n) {
+            Tree tree = new Tree(n);
 
-            for (int i = 1; i <= n; i++)
-            {
-                for (int j = 1; j <= n; j++)
-                {
-                    if (i == j)
-                    {
+            for (int i = 1; i <= n; i++) {
+
+                for (int j = 1; j <= n; j++) {
+                    if (i == j) {
                         continue;
                     }
 
                     int sum = i + j;
-                    if (!IsFairSquare(sum))
-                    {
+                    if (!IsFairSquare(sum)) {
                         continue;
                     }
 
@@ -44,40 +29,36 @@ namespace SquareSums
                 }
             }
 
-            if (!tree.FinalizePairsAndVerifyAllNodesHavePairs())
-            {
+            if (!tree.VerifyAllNodesHavePairs()) {
                 return null;
             }
-            
-            tree.SortPairsUsing(sorting);
+
+            tree.SortPairs();
             return tree;
         }
-
-        private static void Dfs(int n, Node node, Path path, Metrics? metrics, NodesSortingFacade sorting)
+    
+        private static void Dfs(int n, Node node, Path path)
         {
-            metrics?.IncrementDfsCounter();
-            sorting.SortNodes(node.Pairs);
+            var pairs = new List<Node>(node.PairsCount());
+            pairs.AddRange(node.Pairs());
+        
+            pairs.Sort(new NodesComparer(path));
+        
+            foreach (var p in pairs) {
+                int v = p.Value();
 
-            for (var i = 0; i < node.Pairs.Length; i++)
-            {
-                var p = node.Pairs[i];
-                int v = p.Value;
-
-                if (path.Contains(v))
-                {
+                if (path.Contains(v)) {
                     continue;
                 }
 
                 path.Push(v);
 
-                if (path.Count == n)
-                {
+                if (path.Count() == n) {
                     break;
                 }
 
-                Dfs(n, p, path, metrics, sorting);
-                if (path.Count == n)
-                {
+                Dfs(n, p, path);
+                if (path.Count() == n) {
                     break;
                 }
 
@@ -85,36 +66,25 @@ namespace SquareSums
             }
         }
 
-        public static Span<int> SquareSumsRow(int n, Metrics? metrics)
-        {
-            var sortingForTree = new NodesSortingFacade(null, n);
-            var tree = BuildTree(n, sortingForTree);
-            if (tree == null)
-            {
+        public static IReadOnlyList<int> SquareSumsRow(int n) {
+            var tree = BuildTree(n);
+            if (tree == null) {
                 return Array.Empty<int>();
             }
 
-            var list = tree.Roots();
-            for (var i = 0; i < list.Count; i++)
-            {
-                var root = list[i];
+            foreach (var root in tree.Roots()) {
                 var path = new Path(n);
-                var sorting = new NodesSortingFacade(path, n);
                 if (root == null)
                 {
                     throw new NullReferenceException("Unexpected null");
                 }
-
-                path.Push(root.Value);
-                Dfs(n, root, path, metrics, sorting);
-                if (path.Count == n)
-                {
-                    var result = path.AsSpan();
-                    metrics?.FinalizeDfsCounter(n);
+                path.Push(root.Value());
+                Dfs(n, root, path);
+                if (path.Count() == n) {
+                    IReadOnlyList<int> result = path.ToVector();
                     return result;
                 }
             }
-
             return Array.Empty<int>();
         }
     }

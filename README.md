@@ -69,11 +69,10 @@ overflow-checks = false
 
 | Lang |Time | Memory | Normal | Average | Bad | Worst | 
 | --- | ---- |  ---- |  ---- |  ---- |  ---- |  ---- | 
-| C++ | 0:08.88 |4680 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
-| Go | 0:12.56 |8464 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
-| .NET | 0:14.79 |157376 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
-| JS | 0:15.73 |70748 |1648/2000 |250/2000 |82/2000 |117080 for 102 |
-| Rust | 0:09.97 |4040 |1648/2000 |257/2000 |75/2000 |117080 for 102 |
+| C++ | 0:33.92 |588800 |undefined |undefined |undefined |undefined |
+| Go | 1:56.47 |8620 |undefined |undefined |undefined |undefined |
+| .NET | 1:50.79 |117288 |undefined |undefined |undefined |undefined |
+| JS | 0:46.12 |72328 |undefined |undefined |undefined |undefined |
 
 
 - **Time** - Elapsed (wall clock) time (h:mm:ss or m:ss) 
@@ -158,12 +157,9 @@ Tested on **HeadlessChrome/97.0.4691.0**
 
 | Lang |Time | Memory | Size | 
 | --- | ---- |  ---- |  ---- | 
-| C++ (Wasm) | 10.02 |768.00 |237.97 |
-| Rust (Wasm) | 15.34 |256.00 |45.76 |
-| JS (Browser) | 15.84 |17408.00 |55.15 |
-| Go (Wasm) | 34.04 |768.00 |2058.34 |
-| Blazor (AOT) | 163.12 |2484.00 |15263.32 |
-| Blazor | 226.65 |1932.00 |5146.18 |
+| C++ (Wasm) | 29.88 |256.00 |235.79 |
+| JS (Browser) | 43.90 |18176.00 |11.09 |
+| Go (Wasm) | 434.69 |768.00 |2048.40 |
 - **Time** - Calculation duration measured using browser Performance Api 
 - **Memory** - Difference (in Kb) between JSHeapTotalSize before loading script and after calculations run 
 - **Size** - Size (in Kb) of files loaded to run calculations 

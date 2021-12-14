@@ -8,40 +8,25 @@
 #include "Node.hpp"
 #include "Tree.hpp"
 #include "Path.hpp"
-#include "NodesSorting.hpp"
-#include "Metrics.hpp"
+#include "NodesInPathComparer.hpp"
 
-bool is_fair_square(int n)
-{
-    int h = n & 0xF;  // h is the last hex "digit"
-    if (h > 9)
-        return false;
-    // Use lazy evaluation to jump out of the if statement as soon as possible
-    if (h != 2 && h != 3 && h != 5 && h != 6 && h != 7 && h != 8)
-    {
-        int t = (int) floor( sqrt((double) n));
-        return t*t == n;
-    }
-    return false;
+bool is_fair_square(int n) {
+	double sqrtVal = sqrt((double)n);
+	return sqrtVal - floor(sqrtVal) == 0;
 }
 
-template<class T> Tree<T> *build_tree(int n, NodesSorting<T> *sorting)
-{
-	Tree<T> *tree = new Tree<T>(n);
+Tree* build_tree(int n) {
+	Tree *tree = new Tree(n);
 
-	for (int i = 1; i <= n; i++)
-	{
+	for (int i = 1; i <= n; i++) {
 
-		for (int j = 1; j <= n; j++)
-		{
-			if (i == j)
-			{
+		for (int j = 1; j <= n; j++) {
+			if (i == j) {
 				continue;
 			}
 
 			int sum = i + j;
-			if (!is_fair_square(sum))
-			{
+			if (!is_fair_square(sum)) {
 				continue;
 			}
 
@@ -49,80 +34,63 @@ template<class T> Tree<T> *build_tree(int n, NodesSorting<T> *sorting)
 		}
 	}
 
-	if (!tree->VerifyAllNodesHavePairs())
-	{
-		delete tree;
+	if (!tree->VerifyAllNodesHavePairs()) {
+    delete tree;
 		return NULL;
 	}
 
-	tree->SortPairsWithSorting(sorting);
+	tree->SortPairs();
 	return tree;
 }
 
-template<class T> void dfs(int n, Node *node, Path *path, Metrics *metrics, NodesSorting<T> *sorting)
-{
-	if (metrics != NULL) {
-		metrics->IncrementDfsCounter();
-	}
+void dfs(int n, Node *node, Path* path) {
+    std::vector<Node*> pairs(node->PairsCount());
+    std::vector<Node*> src = node->Pairs();
+    std::copy(src.begin(), src.end(), pairs.begin());
 
-	sorting->SortNodes(node->Pairs());
+    std::sort(pairs.begin(), pairs.end(), NodesInPathComparer(path) );
 
-	for (Node *p : *node->Pairs())
-	{
+	for (Node *p : pairs) {
 		int v = p->Value();
 
-		if (path->Contains(v))
-		{
+		if (path->Contains(v)) {
 			continue;
 		}
 
 		path->Push(v);
 
-		if (path->Count() == n)
-		{
+		if (path->Count() == n) {
 			break;
 		}
 
-		dfs(n, p, path, metrics, sorting);
-		if (path->Count() == n)
-		{
+		dfs(n, p, path);
+		if (path->Count() == n) {
 			break;
 		}
 
 		path->Pop();
 	}
+
+    pairs.clear();
 }
 
-template<class T> std::vector<int> square_sums_row(int n, Metrics *metrics)
-{
-	NodesSorting<T> * sorting = new NodesSorting<T>(NULL, n);
-	Tree<T> *tree = build_tree<T>(n, sorting);
-	delete sorting;
-	if (tree == NULL)
-	{
+std::vector<int> square_sums_row(int n) {
+    Tree *tree = build_tree(n);
+	if (tree == NULL) {
 		return std::vector<int>();
 	}
 
-	for (Node *root : *tree->Roots())
-	{
-		Path *path = new Path(n);
-		NodesSorting<T> * sorting = new NodesSorting<T>(path, n);
+    for (Node *root : tree->Roots()) {
+        Path *path = new Path(n);
 		path->Push(root->Value());
-		dfs(n, root, path, metrics, sorting);
-		if (path->Count() == n)
-		{
-			std::vector<int> result = path->ToVector();
-			if (metrics != NULL) {
-				metrics->FinalizeDfsCounter(n);
-			}
-			delete path;
-			delete tree;
-			delete sorting;
+		dfs(n, root, path);
+		if (path->Count() == n) {
+            std::vector<int> result = path->ToVector();
+            delete path;
 			return result;
 		}
-		delete sorting;
-		delete path;
+        delete path;
 	}
-	delete tree;
+    delete tree;
 	return std::vector<int>();
 }

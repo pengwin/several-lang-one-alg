@@ -8,10 +8,6 @@ import (
 	sums "gitlab.com/ikruchkov0/codewars_katas/go/square-sums-simple/pkg"
 )
 
-func sortingFactory(path *sums.Path, maxN int) sums.NodesSortingFacade {
-	return *sums.NewNodesSortingFacade(path, maxN)
-}
-
 func convertWithPanic(str string) int {
 	res, err := strconv.Atoi(str)
 	if err != nil {
@@ -34,10 +30,8 @@ func main() {
 
 	fmt.Printf("Calculating from: %d to: %d\n", from, to)
 
-	metrics := sums.NewMetrics(false)
-
 	for n := from; n <= to; n++ {
-		a := sums.SquareSumsRow(n, metrics, sortingFactory)
+		a := sums.SquareSumsRow(n)
 		if a == nil {
 			// no
 			//fmt.Printf("No")
@@ -47,6 +41,4 @@ func main() {
 		}
 		//fmt.Printf("%d\n", n)
 	}
-
-	metrics.PrintMetrics()
 }

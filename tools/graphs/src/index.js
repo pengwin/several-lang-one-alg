@@ -127,9 +127,6 @@ function main(metricsPath, jsonPath) {
         },
         'JS': {
             file: 'js.txt'
-        },
-        'Rust': {
-            file: 'rust.txt'
         }
     };
     const metrics = loadAllMetrics(metricsPath, binariesMap, metricsMap);

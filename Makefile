@@ -1,4 +1,4 @@
-.PHONY: all build wasm go-bin cpp-bin dotnet-bin js-bin rust-bin go-wasm cpp-wasm dotnet-wasm rust-wasm build-plotter histograms
+.PHONY: all build wasm go-bin cpp-bin dotnet-bin js-bin go-wasm cpp-wasm dotnet-wasm build-plotter histograms
 all: build
 
 SHELL = /bin/bash
@@ -14,7 +14,7 @@ TO=2000
 
 build: go-bin cpp-bin dotnet-bin js-bin
 
-wasm: go-wasm cpp-wasm dotnet-wasm rust-wasm
+wasm: go-wasm cpp-wasm dotnet-wasm
 
 wasm-copy: wasm
 	mkdir -p ./tools/wasm-host/public/dotnet-aot/
@@ -25,7 +25,6 @@ wasm-copy: wasm
 	cp -v ./wasm/cpp-wasm.wasm ./tools/wasm-host/public/cpp-wasm.wasm
 	cp -v ./wasm/go-main.wasm ./tools/wasm-host/public/go-main.wasm
 	cp -v ./wasm/go-wasm_exec.js ./tools/wasm-host/public/go-wasm_exec.js 
-	cp -rv ./wasm/rust-wasm ./tools/wasm-host/public
 	
 go-bin:
 	make -C libs/go build
@@ -48,11 +47,6 @@ dotnet-wasm:
 js-bin:
 	make -C libs/js build
 
-rust-bin:
-	make -C libs/rust build
-
-rust-wasm:
-	make -C libs/rust wasm
 
 time-go-bin: go-bin
 	mkdir -p $(METRICS_DIR)
@@ -74,17 +68,12 @@ time-dotnet-bin: dotnet-bin
 	echo '' > ./metrics/dotnet.txt
 	$(TIME) ./bin/dotnet/SquareSumsCli $(FROM) $(TO)  2>&1 | tee -a $(METRICS_DIR)/dotnet.txt
 
-time-rust-bin: rust-bin
-	mkdir -p $(METRICS_DIR)
-	echo '' > ./metrics/rust.txt
-	$(TIME) ./bin/rust $(FROM) $(TO) 2>&1 | tee -a $(METRICS_DIR)/rust.txt
-
-time-bin: time-dotnet-bin time-go-bin time-js-bin time-cpp-bin time-rust-bin
+time-bin: time-dotnet-bin time-go-bin time-js-bin time-cpp-bin
 
 md-table: time-bin
 	node ./tools/graphs/src/index.js $(METRICS_DIR) $(METRICS_JSON) > ./bin/results.md
 
-md-wasm-table: wasm
+md-wasm-table: wasm-copy
 	node ./tools/wasm-collector/src/index.js $(WASM_METRICS_JSON) ./bin/results-wasm.md
 
 build-plotter:

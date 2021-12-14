@@ -4,12 +4,10 @@
     [JSInvokable]
     public static Task<int> FullSquareSums(int from, int to)
     {
-        var metrics = new Metrics(false);
         for (var n = from; n <= to; n++)
         {
-            Calculator.SquareSumsRow(n, metrics);
+            Calculator.SquareSumsRow(n);
         }
-        metrics.PrintMetrics();
         return Task.FromResult(0);
     }
 }

@@ -1,56 +1,64 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-
-// ReSharper disable ForCanBeConvertedToForeach
 
 namespace SquareSums
 {
-    public sealed class Node
-    {
-        /// <summary>
-        /// Used while constructing tree
-        /// </summary>
-        private readonly List<Node> _buildTimePairs;
-        /// <summary>
-        /// Used while constructing tree
-        /// </summary>
-        private readonly List<int> _buildTimeValues;
-        private Node[] _pairs;
-        private int[] _values;
-        
-        public Node(int val)
-        {
-            Value = val;
-            _buildTimePairs = new List<Node>(val);
-            _buildTimeValues = new List<int>(val);
-            _pairs = Array.Empty<Node>();
-            _values = Array.Empty<int>();
+    internal class Node {
+    
+        private readonly int _value;
+        private readonly List<Node> _pairs;
+
+    
+        public Node(int val) {
+            _value = val;
+            _pairs = new List<Node>();
+        }
+    
+
+        public int Value() {
+            return _value;
         }
 
-
-        public int Value { get; }
-
-        public Span<int> PairsValues => _values.AsSpan();
-        
-        public Span<Node> Pairs => _pairs.AsSpan();
-
-        
-        public void Add(Node node)
-        {
-            _buildTimePairs.Add(node);
-            _buildTimeValues.Add(node.Value);
+        public IReadOnlyList<Node> Pairs() {
+            return _pairs;
         }
 
-        public void FinalizePairs()
-        {
-            _pairs = _buildTimePairs.ToArray();
-            _values = _buildTimeValues.ToArray();
-            _buildTimePairs.Clear();
-            _buildTimeValues.Clear();
+        public void SortPairs() {
+            _pairs.Sort(CompareNodes);
         }
 
-        public int PairsCount => _pairs.Length;
+        public void Add(Node node ) {
+            _pairs.Add(node);
+        }
+
+        public int PairsCount() {
+            return _pairs.Count;
+        }
+
+        /*void PrintPairs() {
+            std::cout << Value() << ":[";
+            for (Node *p : pairs) {
+                int v = p.Value();
+                std::cout << v << ", ";
+            }
+            std::cout << "]\n";
+        }*/
+
+        public static int CompareNodes(Node? i, Node? j) 
+        {
+            if (i == null || j == null)
+            {
+                return 0;
+            }
         
+            int a = i.PairsCount();
+            int b = j.PairsCount();
+
+            if (a < b)
+            {
+                return -1;
+            }
+
+            return 1;
+        }
     };
 }

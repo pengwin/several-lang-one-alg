@@ -2,28 +2,15 @@ package sums
 
 import (
 	"math"
+	"sort"
 )
 
-/*func IsFairSquare(n int) bool {
+func IsFairSquare(n int) bool {
 	sqrt := math.Sqrt(float64(n))
 	return sqrt-math.Floor(sqrt) == 0
-}*/
-
-func IsFairSquare(n int) bool {
-	h := n & 0xF // h is the last hex "digit"
-	if h > 9 {
-		return false
-	}
-
-	// Use lazy evaluation to jump out of the if statement as soon as possible
-	if h != 2 && h != 3 && h != 5 && h != 6 && h != 7 && h != 8 {
-		t := int(math.Floor(math.Sqrt((float64(n)))))
-		return t*t == n
-	}
-	return false
 }
 
-func buildTree(n int, sorting NodesSortingFacade) *Tree {
+func buildTree(n int) *Tree {
 	tree := NewTree(n)
 
 	for i := 1; i <= n; i++ {
@@ -45,19 +32,22 @@ func buildTree(n int, sorting NodesSortingFacade) *Tree {
 		return nil
 	}
 
-	tree.SortPairsWithSorting(sorting)
+	tree.SortPairs()
 	return tree
 }
 
-func dfs(n int, node *Node, path *Path, metrics *Metrics, sorting NodesSortingFacade) {
+func dfs(n int, node *Node, path *Path) {
 
-	if metrics != nil {
-		metrics.IncrementDfsCounter()
+	pairs := make([]*Node, node.PairsCount())
+	copy(pairs, node.Pairs())
+	sortFn := func(i, j int) bool {
+		a := pairs[i].PairsNotInPathCount(path)
+		b := pairs[j].PairsNotInPathCount(path)
+		return a < b
 	}
+	sort.Slice(pairs, sortFn)
 
-	sorting.SortNodes(node.Pairs())
-
-	for _, p := range node.Pairs() {
+	for _, p := range pairs {
 		v := p.Value()
 
 		if path.Contains(v) {
@@ -70,7 +60,7 @@ func dfs(n int, node *Node, path *Path, metrics *Metrics, sorting NodesSortingFa
 			return
 		}
 
-		dfs(n, p, path, metrics, sorting)
+		dfs(n, p, path)
 		if path.Count() == n {
 			return
 		}
@@ -79,22 +69,17 @@ func dfs(n int, node *Node, path *Path, metrics *Metrics, sorting NodesSortingFa
 	}
 }
 
-func SquareSumsRow(n int, metrics *Metrics, sortingFactory NodesSortingFactory) []int {
-	sorting := sortingFactory(nil, n)
-	tree := buildTree(n, sorting)
+func SquareSumsRow(n int) []int {
+	tree := buildTree(n)
 	if tree == nil {
 		return nil
 	}
 
 	for _, root := range tree.Roots() {
-		path := NewPath(n)
-		sorting := sortingFactory(path, n)
+		path := NewPath()
 		path.Push(root.Value())
-		dfs(n, root, path, metrics, sorting)
+		dfs(n, root, path)
 		if path.Count() == n {
-			if metrics != nil {
-				metrics.FinalizeDfsCounter(n)
-			}
 			return path.Array()
 		}
 	}

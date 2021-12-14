@@ -1,9 +1,6 @@
 #include <iostream>
 
 #include "SquareSums.hpp"
-#include "Metrics.hpp"
-#include "NativeNodesSorting.hpp"
-#include "QSortNodesSorting.hpp"
 
 int main(int argc, char** argv) {
 
@@ -19,10 +16,7 @@ int main(int argc, char** argv) {
     for (int i = 0; i < argc; ++i)
         std::cout << argv[i] << "\n";
 
-    Metrics* metrics = new Metrics(false);
     for (int n = from ; n <= to ; n++) {
-        std::vector<int> res = square_sums_row<NativeNodesSorting>(n, metrics);
+        std::vector<int> res = square_sums_row(n);
     }
-    metrics->PrintMetrics();
-    delete metrics;
 }

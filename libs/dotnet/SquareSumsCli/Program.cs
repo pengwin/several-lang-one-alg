@@ -19,13 +19,10 @@ namespace SquareSums
             
             Console.WriteLine("Calculating from: {0} to: {1}", from, to);
             
-            var metrics = new Metrics(false);
             for (var n = from; n <= to; n++)
             {
-                Calculator.SquareSumsRow(n, metrics);
+                Calculator.SquareSumsRow(n);
             }
-
-            metrics.PrintMetrics();
         }
     }
 }

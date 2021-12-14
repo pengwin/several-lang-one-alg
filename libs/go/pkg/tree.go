@@ -2,6 +2,7 @@ package sums
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -17,6 +18,14 @@ func NewNode(n int) *Node {
 	}
 }
 
+func sortNodesFunc(nodes []*Node) func(int, int) bool {
+	return func(i, j int) bool {
+		pairsCountA := nodes[i].PairsCount()
+		pairsCountB := nodes[j].PairsCount()
+		return pairsCountA < pairsCountB
+	}
+}
+
 func (n *Node) Value() int {
 	return n.value
 }
@@ -25,8 +34,8 @@ func (n *Node) Pairs() []*Node {
 	return n.pairs
 }
 
-func (n *Node) SortPairsWithSorting(sorting NodesSortingFacade) {
-	sorting.SortNodes(n.Pairs())
+func (n *Node) SortPairs() {
+	sort.Slice(n.pairs, sortNodesFunc(n.pairs))
 }
 
 func (n *Node) String() string {
@@ -107,11 +116,11 @@ func (t *Tree) VerifyAllNodesHavePairs() bool {
 	return true
 }
 
-func (t *Tree) SortPairsWithSorting(sorting NodesSortingFacade) {
+func (t *Tree) SortPairs() {
 	for _, n := range t.nodes {
-		n.SortPairsWithSorting(sorting)
+		n.SortPairs()
 	}
-	sorting.SortNodes(t.nodes)
+	sort.Slice(t.nodes, sortNodesFunc(t.nodes))
 }
 
 func (t *Tree) String() string {
