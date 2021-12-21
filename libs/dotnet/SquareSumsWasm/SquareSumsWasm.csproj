@@ -22,15 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="Shared\MainLayout.razor" />
-      <_ContentIncludedByDefault Remove="Shared\NavMenu.razor" />
-      <_ContentIncludedByDefault Remove="Shared\SurveyPrompt.razor" />
-      <_ContentIncludedByDefault Remove="Pages\Counter.razor" />
-      <_ContentIncludedByDefault Remove="Pages\FetchData.razor" />
-      <_ContentIncludedByDefault Remove="Pages\Index.razor" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\SquareSums\SquareSums.csproj" />
     </ItemGroup>
 

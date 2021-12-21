@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SquareSumsWasm", "SquareSum
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "Benchmarks\Benchmarks.csproj", "{1BB5524B-35F5-4CD7-B4D0-4C7DE19F7343}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SquareSumsUno.Wasm", "SquareSumsUno.Wasm\SquareSumsUno.Wasm.csproj", "{0C1D32F8-3393-4A9B-871A-B13CCF100329}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{1BB5524B-35F5-4CD7-B4D0-4C7DE19F7343}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BB5524B-35F5-4CD7-B4D0-4C7DE19F7343}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BB5524B-35F5-4CD7-B4D0-4C7DE19F7343}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C1D32F8-3393-4A9B-871A-B13CCF100329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C1D32F8-3393-4A9B-871A-B13CCF100329}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C1D32F8-3393-4A9B-871A-B13CCF100329}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C1D32F8-3393-4A9B-871A-B13CCF100329}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

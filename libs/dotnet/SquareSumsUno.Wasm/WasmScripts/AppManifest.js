@@ -1,0 +1,5 @@
+var UnoAppManifest = {
+
+    displayName: "SquareSumsUno"
+
+}

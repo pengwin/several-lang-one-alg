@@ -19,6 +19,7 @@ wasm: go-wasm cpp-wasm dotnet-wasm rust-wasm
 wasm-copy: wasm
 	mkdir -p ./tools/wasm-host/public/dotnet-aot/
 	mkdir -p ./tools/wasm-host/public/dotnet-no-aot/
+	mkdir -p ./tools/wasm-host/public/dotnet-uno/
 	cp -rv ./wasm/dotnet/wwwroot/dotnet-aot/_framework ./tools/wasm-host/public/dotnet-aot/_framework
 	cp -rv ./wasm/dotnet/wwwroot/dotnet-no-aot/_framework ./tools/wasm-host/public/dotnet-no-aot/_framework
 	cp -v ./wasm/cpp-wasm.js ./tools/wasm-host/public/cpp-wasm.js
@@ -26,6 +27,8 @@ wasm-copy: wasm
 	cp -v ./wasm/go-main.wasm ./tools/wasm-host/public/go-main.wasm
 	cp -v ./wasm/go-wasm_exec.js ./tools/wasm-host/public/go-wasm_exec.js 
 	cp -rv ./wasm/rust-wasm ./tools/wasm-host/public
+	cp -rv ./wasm/dotnet-uno/embedded.js ./tools/wasm-host/public/dotnet-uno/embedded.js
+	cp -rv ./wasm/dotnet-uno/package_* ./tools/wasm-host/public/dotnet-uno
 	
 go-bin:
 	make -C libs/go build

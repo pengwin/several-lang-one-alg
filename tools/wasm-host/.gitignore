@@ -29,3 +29,5 @@ yarn-error.log*
 /public/go-main.wasm
 /public/go-wasm_exec.js
 /public/rust-wasm
+/public/dotnet-uno
+/public/package_*

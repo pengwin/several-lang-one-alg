@@ -1,0 +1,7 @@
+<linker>
+  <!--<assembly fullname="Uno.UI" />-->
+  <assembly fullname="SquareSumsUno.Wasm" />
+  <assembly fullname="SquareSums" />
+  <assembly fullname="System.Core">
+  </assembly>
+</linker>

@@ -79,6 +79,48 @@ function createWasmMap() {
     })
   });
 
+  map.set('dotnet-uno', {
+    loader: async () => {
+      const scriptId = 'dotnet_uno_wasm';
+      if (document.getElementById(scriptId)) {
+        return;
+      }
+
+      function addScriptLoader(scriptUrl: string, id: string) {
+        return new Promise<void>((r) => {
+          const script = document.createElement('script');
+        script.id = scriptId + id;
+        script.src = scriptUrl;
+        script.async = false;
+        script.addEventListener('load', () => {
+          const interval = setInterval(() => {
+            const e = document.getElementsByClassName('uno-loader');
+            if (e.length > 0) {
+              (e[0] as any).hidden = true;
+              clearInterval(interval);
+            }
+          }, 100);
+          r();
+        });
+        document.body.appendChild(script);
+        });
+      }
+
+      const unoDiv = document.createElement('div');
+      unoDiv.id = 'uno-body';
+      document.body.appendChild(unoDiv);
+
+      await addScriptLoader('/dotnet-uno/embedded.js', 'embedded');
+
+      
+    },
+    runner: () => new Promise<void>((resolve, reject) => {
+      const m = window.Module.mono_bind_static_method("[SquareSumsUno.Wasm] SquareSumsUno.Wasm.SquareSums:FullSquareSums");
+      m(window.wasmRunner.from, window.wasmRunner.to);
+      resolve();
+    })
+  });
+
   map.set('cpp', {
     loader: () => new Promise<void>((resolve, reject) => {
       const scriptId = 'cpp_wasm';

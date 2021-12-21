@@ -164,6 +164,7 @@ Tested on **HeadlessChrome/97.0.4691.0**
 | Go (Wasm) | 32.47 |512.00 |2058.38 |
 | Blazor (AOT) | 159.62 |2228.00 |15263.32 |
 | Blazor | 219.95 |1676.00 |5146.18 |
+| Uno (Full AOT) | 61.82 | ??? | 32800 |
 - **Time** - Calculation duration measured using browser Performance Api 
 - **Memory** - Difference (in Kb) between JSHeapTotalSize before loading script and after calculations run 
 - **Size** - Size (in Kb) of files loaded to run calculations 
