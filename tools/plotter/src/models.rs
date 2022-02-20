@@ -19,22 +19,27 @@ pub struct LangDef {
 }
 
 fn map_color(key: &str) -> RGBColor {
-    let dotnet_color = RGBColor(0, 125, 200);
+    let dotnet_color = RGBColor(171, 219, 221);
+    let cpp_color = RGBColor(0, 145, 172);
+    let go_color = RGBColor(16, 48, 62);
+    let js_color = RGBColor(255, 192, 0);
+    let rust_color = RGBColor(241, 93, 69);
+
 
     if key.to_lowercase().contains("c++") {
-        return RGBColor(200, 0, 0);
+        return cpp_color;
     }
 
     if key.to_lowercase().contains("go") {
-        return RGBColor(125, 0, 0);
+        return go_color;
     }
 
     if key.to_lowercase().contains("js") {
-        return RGBColor(0, 200, 0);
+        return js_color;
     }
 
     if key.to_lowercase().contains("rust") {
-        return RGBColor(0, 125, 125);
+        return rust_color;
     }
 
     if key.to_lowercase().contains("blazor") {
@@ -42,6 +47,10 @@ fn map_color(key: &str) -> RGBColor {
     }
 
     if key.to_lowercase().contains(".net") {
+        return dotnet_color;
+    }
+
+    if key.to_lowercase().contains("uno") {
         return dotnet_color;
     }
 
@@ -100,7 +109,7 @@ pub fn combine(a: &[LangDef], b: &[LangDef]) -> Vec<LangDef> {
     let mut res = vec![];
 
     // use to get desired order
-    let names = ["c++", "rust", "go", "js", ".net", "blazor"];
+    let names = ["c++", "rust", "go", "js", ".net", "blazor", "uno"];
 
     for n in names {
         for i in a.iter().filter(|e| e.name.to_lowercase().contains(n)) {
@@ -134,7 +143,7 @@ pub fn exclude(a: &[LangDef], exclude_list: &[&str]) -> Vec<LangDef> {
 fn read_map_metrics<T: DeserializeOwned, M: Fn(&str, &T) -> LangDef>(file: &str, mapper_fn: M) -> Result<Vec<LangDef>, String> {
     let map = read_metrics::<T>(file)?;
 
-    let langs = ["c++", "rust", "go", "js", ".net", "blazor"];
+    let langs = ["c++", "rust", "go", "js", ".net", "blazor", "uno"];
 
     let mut res = vec![];
 

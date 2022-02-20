@@ -23,7 +23,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let binary = models::read_binary_metrics(&args[1])?;
     let wasm = models::read_wasm_metrics(&args[2])?;
     let combined = models::combine(&binary, &wasm);
-    let combined_wo_blazor = models::exclude(&combined, &["blazor", ".net"]);
+    let combined_wo_blazor = models::exclude(&combined, &["blazor", ".net", "uno"]);
 
     let histograms_path = PathBuf::from(&args[3]);
 

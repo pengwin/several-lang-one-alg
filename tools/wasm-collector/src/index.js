@@ -205,7 +205,7 @@ async function main(jsonPath, markdownPath) {
   let langs = [
     'cpp', 'rust',
     'js', 'golang', 
-    'dotnet_aot','dotnet_no_aot'
+    'dotnet_aot','dotnet_no_aot', 'dotnet-uno'
   ];
 
   let langsMap = {
@@ -214,7 +214,8 @@ async function main(jsonPath, markdownPath) {
     'golang': 'Go (Wasm)',
     'rust': 'Rust (Wasm)',
     'dotnet_aot': 'Blazor (AOT)',
-    'dotnet_no_aot': 'Blazor'
+    'dotnet_no_aot': 'Blazor',
+    'dotnet-uno': 'UNO'
   }
 
   let metrics = {};
